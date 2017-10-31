@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     {
         std::cerr << "You must specify:" << std::endl
                   << "source HTML file URL as first cmd argument." << std::endl
-                  << "Example: www.meetangee.com" << std::endl;
+                  << "Example: ./itransition-task www.meetangee.com" << std::endl;
         return -1;
     }
 
