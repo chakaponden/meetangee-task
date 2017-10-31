@@ -17,4 +17,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - download files using [curl](https://github.com/curl/curl)
 - parce HTML structure using [google gumbo](https://github.com/google/gumbo-parser) + [gumbo easy API](https://github.com/RPG-18/EasyGumbo)
 - generate adler32 hash using [zlib](https://github.com/madler/zlib)
+- create absolute URL using boost::network::uri from [cpp-netlib](https://github.com/cpp-netlib/cpp-netlib)
 - customize terminal text color
