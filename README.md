@@ -40,4 +40,4 @@ How to build
 
 	$ cmake "path-to-sources"
 	$ make
-	$ ./itransition-task www.meetangee.com
+	$ ./itransition-task http://www.meetangee.com
