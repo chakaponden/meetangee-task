@@ -2,8 +2,10 @@
 #include <string>
 #include <map>
 #include <tuple>
+#include <boost/network/uri.hpp>
+#include <boost/network/uri/uri_io.hpp>
 
-#include "HTTPDownloader.h"
+#include "DownloaderString.h"
 #include "HTMLParser.h"
 #include "Adler32Generator.h"
 #include "TextColor.hpp"
@@ -14,13 +16,22 @@ int main(int argc, char *argv[])
     {
         std::cerr << "You must specify:" << std::endl
                   << "source HTML file URL as first cmd argument." << std::endl
-                  << "Example: ./itransition-task www.meetangee.com" << std::endl;
-        return -1;
+                  << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
+        return 1;
     }
-
-    // download html file content
-    HTTPDownloader downloader;
-    std::string content = downloader.Download(argv[1]);
+    // source HTML file URL validation
+    boost::network::uri::uri URL(argv[1]);
+    if(!URL.is_valid())
+    {
+        std::cerr << "Error! Source HTML file URL is invalid." << std::endl
+                  << "Specify valid HTML file URL as first cmd argument." << std::endl
+                  << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
+        return 2;
+    }
+    // download html file content as string
+    DownloaderString downloader;
+    downloader.SetURL(URL.string());
+    downloader();
 
     HTMLParser parcer;
     /** 
@@ -30,12 +41,14 @@ int main(int argc, char *argv[])
      */
     using FileInfo = std::tuple<std::string, unsigned long, size_t>;
     std::map<size_t, FileInfo> downloadedFiles;
-    for(std::string hrefValue : parcer.Parse(content, argv[1], "http"))
+    for(std::string hrefValue : parcer.Parse(downloader.GetContent(), URL.string()))
     {
         Adler32Generator adler32;
-        HTTPDownloader downloaderRefFile;
+        DownloaderString downloaderRefFile;
+        downloaderRefFile.SetURL(hrefValue);
         // download content file
-        std::string contentRefFile = downloaderRefFile.Download(hrefValue);
+        downloaderRefFile();
+        std::string contentRefFile = downloaderRefFile.GetContent();
         downloadedFiles.insert(
             std::pair<size_t, FileInfo>(contentRefFile.size(),
                                         std::make_tuple(hrefValue,

@@ -9,6 +9,7 @@
 #include <vector>
 /**
  * A simple Gumbo HTML5 parser
+ * get all link references from HTML content
  */
 class HTMLParser
 {
@@ -18,7 +19,7 @@ public:
     /**
      * Parse a HTML structure store in a std::string using Gumbo HTML5 parser
      * @param content The HTML content
-     * @return The raw parse result: vector of raw parsed content
+     * @return The raw parse result: vector of raw link references from HTML content
      */
     std::vector<std::string> Parse(const std::string& content);
 
@@ -26,12 +27,9 @@ public:
      * Parse a HTML structure store in a std::string using Gumbo HTML5 parser
      * @param content The HTML content
      * @param rootURL The root item URL from which relative full path result will be formed
-     * @param content The HTML content
-     * @param schemeURL The root item URL scheme
-     * @return The full path parse result: vector of parsed content full path
+     * @return The absolute parse result: vector of absolute link references from HTML content
      */
     std::vector<std::string> Parse(const std::string& content,
-                                   const std::string& rootURL,
-                                   const std::string& schemeURL);
+                                   const std::string& rootURL);
 };
 #endif  /* HTMLPARSER_H */

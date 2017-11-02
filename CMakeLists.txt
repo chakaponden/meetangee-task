@@ -11,8 +11,10 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 file(GLOB SOURCES
 	main.cpp
-    HTTPDownloader.h
-    HTTPDownloader.cpp
+    DownloaderString.h
+    DownloaderString.cpp
+    DownloaderFile.h
+    DownloaderFile.cpp
     HTMLParser.h
     HTMLParser.cpp
     Adler32Generator.h
