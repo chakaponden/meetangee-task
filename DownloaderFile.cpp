@@ -45,6 +45,7 @@ DownloaderFile::~DownloaderFile()
 void DownloaderFile::SetURL(const std::string& URL)
 {
     _URL = URL;
+    curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
 }
 
 std::string DownloaderFile::GetURL() const
@@ -55,6 +56,16 @@ std::string DownloaderFile::GetURL() const
 void DownloaderFile::SetFilePath(const std::string& fullPath)
 {
     _filePath = fullPath;
+    /* control what data CURLOPT_WRITEFUNCTION gets */
+    _filePointer = fopen(_filePath.c_str(), "wb");
+    if(_filePointer == NULL)
+    {
+        fprintf(stderr, "fopen() failed: %s\n",
+                strerror(errno));
+        return;
+    }
+    curl_easy_setopt(_curlEasyHandle, CURLOPT_WRITEDATA, _filePointer);
+
 }
 
 std::string DownloaderFile::GetFilePath() const
@@ -66,17 +77,6 @@ int DownloaderFile::Download()
 {
     if(_curlEasyHandle)
     {
-        FILE *fp;
-        fp = fopen(_filePath.c_str(), "wb");
-        if(fp == NULL)
-        {
-            fprintf(stderr, "fopen() failed: %s\n",
-                    strerror(errno));
-            return 4;
-        }
-        curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
-        /* control what data CURLOPT_WRITEFUNCTION gets */
-        curl_easy_setopt(_curlEasyHandle, CURLOPT_WRITEDATA, fp);
         /* Perform the request, res will get the return code */
         CURLcode res = curl_easy_perform(_curlEasyHandle);
         /* Check for errors */
@@ -86,16 +86,22 @@ int DownloaderFile::Download()
                     curl_easy_strerror(res));
             return 1;
         }
-        if(fclose(fp) == EOF)
+        if(fclose(_filePointer) == EOF)
         {
             fprintf(stderr, "fclose() failed: %s\n",
                     strerror(errno));
             return 3;
         }
     }
+    else if(_filePointer == NULL)
+    {
+        fprintf(stderr, "file %s is not opened\n",
+                _filePath.c_str());
+        return 2;
+    }
     else
     {
-        fprintf(stderr, "curl is not initialized\n");
+        fprintf(stderr, "curl easy is not initialized\n");
         return 2;
     }
     return 0;
@@ -110,4 +116,9 @@ size_t DownloaderFile::WriteDataFile(void* ptr, size_t size, size_t nmemb, FILE 
 {
     size_t written = fwrite(ptr, size, nmemb, stream);
     return written;
+}
+
+CURL* DownloaderFile::GetCurlEasyHandler() const
+{
+    return _curlEasyHandle;
 }

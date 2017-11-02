@@ -11,6 +11,9 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 file(GLOB SOURCES
 	main.cpp
+    ICurlEasyDownloader.h
+    DownloaderParallel.h
+    DownloaderParallel.cpp
     DownloaderString.h
     DownloaderString.cpp
     DownloaderFile.h

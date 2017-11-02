@@ -7,12 +7,15 @@
 #define DOWNLOADERSTRING_H
 #include <string>
 #include <curl/curl.h>
+
+#include "ICurlEasyDownloader.h"
 /**
  * A non-threadsafe simple libcURL-easy based HTTP downloader
  * downloaded file content accessible by DownloaderString::GetContent()
  */
-class DownloaderString
+class DownloaderString : private ICurlEasyDownloader
 {
+    friend class DownloaderParallel;
 public:
     DownloaderString();
     ~DownloaderString();
@@ -35,6 +38,7 @@ private:
      */
     static size_t WriteData(void* buffer, size_t size,
                             size_t nmemb, std::string* userp);
+    CURL* GetCurlEasyHandler() const override;
 
 private:
     CURL* _curlEasyHandle;

@@ -47,6 +47,7 @@ DownloaderString::~DownloaderString()
 void DownloaderString::SetURL(const std::string& URL)
 {
     _URL = URL;
+    curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
 }
 
 std::string DownloaderString::GetURL() const
@@ -64,7 +65,6 @@ int DownloaderString::Download()
     _content.clear();
     if(_curlEasyHandle)
     {
-        curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
         /* Perform the request, res will get the return code */
         CURLcode res = curl_easy_perform(_curlEasyHandle);
         /* Check for errors */
@@ -77,7 +77,7 @@ int DownloaderString::Download()
     }
     else
     {
-        fprintf(stderr, "curl is not initialized\n");
+        fprintf(stderr, "curl easy is not initialized\n");
         return 2;
     }
     return 0;
@@ -92,4 +92,9 @@ size_t DownloaderString::WriteData(void* buffer, size_t size, size_t nmemb, std:
 {
     userp->append(static_cast<char*>(buffer), size * nmemb);
     return size * nmemb;
+}
+
+CURL* DownloaderString::GetCurlEasyHandler() const
+{
+    return _curlEasyHandle;
 }

@@ -7,12 +7,15 @@
 #define DOWNLOADERFILE_H
 #include <string>
 #include <curl/curl.h>
+
+#include "ICurlEasyDownloader.h"
 /**
  * A non-threadsafe simple libcURL-easy based HTTP downloader
  * save downloaded file on storage by file path
  */
-class DownloaderFile
+class DownloaderFile : private ICurlEasyDownloader
 {
+    friend class DownloaderParallel;
 public:
     DownloaderFile();
     ~DownloaderFile();
@@ -37,10 +40,12 @@ private:
      */
     static size_t WriteDataFile(void* ptr, size_t size,
                                 size_t nmemb, FILE *stream);
+    CURL* GetCurlEasyHandler() const override;
 
 private:
     CURL* _curlEasyHandle;
     std::string _URL;
     std::string _filePath;
+    FILE* _filePointer;
 };
 #endif  /* DOWNLOADERFILE_H */
