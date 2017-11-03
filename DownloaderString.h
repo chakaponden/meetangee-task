@@ -7,13 +7,14 @@
 #define DOWNLOADERSTRING_H
 #include <string>
 #include <curl/curl.h>
+#include <memory>
 
 #include "ICurlEasyDownloader.h"
 /**
  * A non-threadsafe simple libcURL-easy based HTTP downloader
  * downloaded file content accessible by DownloaderString::GetContent()
  */
-class DownloaderString : private ICurlEasyDownloader
+class DownloaderString : public ICurlEasyDownloader
 {
     friend class DownloaderParallel;
 public:
@@ -45,4 +46,5 @@ private:
     std::string _URL;
     std::string _content;
 };
+using DownloaderStringShp = std::shared_ptr<DownloaderString>;
 #endif  /* DOWNLOADERSTRING_H */

@@ -13,7 +13,7 @@
  * A non-threadsafe simple libcURL-easy based HTTP downloader
  * save downloaded file on storage by file path
  */
-class DownloaderFile : private ICurlEasyDownloader
+class DownloaderFile : public ICurlEasyDownloader
 {
     friend class DownloaderParallel;
 public:

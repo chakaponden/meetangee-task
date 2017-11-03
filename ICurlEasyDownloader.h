@@ -16,6 +16,5 @@ class ICurlEasyDownloader
 public:
     virtual CURL* GetCurlEasyHandler() const = 0;
 };
-using ICurlEasyDownloaderShp = std::shared_ptr<ICurlEasyDownloader>;
 
 #endif  /* ICURLEASYDOWNLOADER_H */

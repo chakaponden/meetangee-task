@@ -2,10 +2,12 @@
 #include <string>
 #include <map>
 #include <tuple>
+#include <thread>
 #include <boost/network/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
 
 #include "DownloaderString.h"
+#include "DownloaderParallel.h"
 #include "HTMLParser.h"
 #include "Adler32Generator.h"
 #include "TextColor.hpp"
@@ -29,11 +31,22 @@ int main(int argc, char *argv[])
         return 2;
     }
     // download html file content as string
-    DownloaderString downloader;
-    downloader.SetURL(URL.string());
-    downloader();
+    DownloaderString downloaderRoot;
+    downloaderRoot.SetURL(URL.string());
+    downloaderRoot();
 
     HTMLParser parcer;
+    std::vector<DownloaderStringShp> downloaders;
+    DownloaderParallel downloaderParallel;
+    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(), URL.string()))
+    {
+        DownloaderStringShp downloaderSimple = std::make_shared<DownloaderString>();
+        downloaderSimple->SetURL(hrefValue);
+        downloaders.push_back(downloaderSimple);
+        downloaderParallel.AddDownloader(downloaderSimple.get());
+    }
+    downloaderParallel();
+
     /** 
      * 0: file absolute URL
      * 1: file content adler32 hash
@@ -41,19 +54,15 @@ int main(int argc, char *argv[])
      */
     using FileInfo = std::tuple<std::string, unsigned long, size_t>;
     std::map<size_t, FileInfo> downloadedFiles;
-    for(std::string hrefValue : parcer.Parse(downloader.GetContent(), URL.string()))
+    for(DownloaderStringShp simpleDownloader : downloaders)
     {
-        Adler32Generator adler32;
-        DownloaderString downloaderRefFile;
-        downloaderRefFile.SetURL(hrefValue);
-        // download content file
-        downloaderRefFile();
-        std::string contentRefFile = downloaderRefFile.GetContent();
-        downloadedFiles.insert(
-            std::pair<size_t, FileInfo>(contentRefFile.size(),
-                                        std::make_tuple(hrefValue,
-                                                        adler32.Generate(contentRefFile),
-                                                        contentRefFile.size())));
+      Adler32Generator adler32;
+      std::string contentRefFile = simpleDownloader->GetContent();
+      downloadedFiles.insert(
+        std::pair<size_t, FileInfo>(contentRefFile.size(),
+                                    std::make_tuple(simpleDownloader->GetURL(),
+                                                    adler32.Generate(contentRefFile),
+                                                    contentRefFile.size())));
     }
 
     if(!downloadedFiles.empty())

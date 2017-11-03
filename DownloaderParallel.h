@@ -21,8 +21,8 @@ public:
     DownloaderParallel();
     ~DownloaderParallel();
 
-    void AddDownloader(const std::vector<ICurlEasyDownloaderShp>& downloaders);
-    void RemoveDownloader(const std::vector<ICurlEasyDownloaderShp>& downloaders);
+    void AddDownloader(const ICurlEasyDownloader* downloaders);
+    void RemoveDownloader(const ICurlEasyDownloader* downloaders);
 
     /**
      * Download a file using HTTP GET and store in in a std::string

@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ## [Todo]
-- remove dependence from [cpp-netlib](https://github.com/cpp-netlib): create absolute URL and source URL validation without usage [boost::network::uri](https://github.com/cpp-netlib/uri/blob/master/src/uri.cpp)
+- remove dependence from [cpp-netlib](https://github.com/cpp-netlib/uri): create absolute URL and source URL validation without usage [boost::network::uri](https://github.com/cpp-netlib/uri/blob/master/src/uri.cpp)
 - thread safe HTTPDownloader
-- download all files in parallel
+- download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
 - OOP code reuse
+
+## [1.2.0] - 2017-11-03
+### Added
+- download all files in parallel using [curl](https://github.com/curl/curl) and synchronous I/O multiplexing [select()](https://linux.die.net/man/2/select)
 
 ## [1.1.0] - 2017-11-02
 ### Added
@@ -22,5 +26,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - download files using [curl](https://github.com/curl/curl)
 - parce HTML structure using [google gumbo](https://github.com/google/gumbo-parser) + [gumbo easy API](https://github.com/RPG-18/EasyGumbo)
 - generate adler32 hash using [zlib](https://github.com/madler/zlib)
-- create absolute URL using [boost::network::uri](https://github.com/cpp-netlib/uri/blob/master/src/uri.cpp) from [cpp-netlib](https://github.com/cpp-netlib)
+- create absolute URL using [boost::network::uri](https://github.com/cpp-netlib/uri/blob/master/src/uri.cpp) from [cpp-netlib](https://github.com/cpp-netlib/uri)
 - customize terminal text color
