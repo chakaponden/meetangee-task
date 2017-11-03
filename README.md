@@ -25,11 +25,11 @@ Requirements
 The following packages are needed to build:
 
 * gcc 5.4.0
-* cmake 2.8.0
+* cmake 3.5.1
 * zlib 1.2.8
 * curl 7.47.0
 * gumbo 1.6.0
-* soup 2.4.0
+* soup 2.52.2
 * glib 2.2.3
 * gtk 2.24.30
 
