@@ -6,8 +6,7 @@
  */
 #include "HTMLParser.h"
 #include "Gumbo.hpp"
-#include <boost/network/uri.hpp>
-#include <boost/network/uri/uri_io.hpp>
+#include "URI.h"
 #include <sstream>
 #include <iostream>
 #include <algorithm>
@@ -42,13 +41,17 @@ std::vector<std::string> HTMLParser::Parse(const std::string& content)
 std::vector<std::string> HTMLParser::Parse(const std::string& content,
                                            const std::string& rootURL)
 {
+    URI rootURI(rootURL);
     // lambda convert relative URL to absolute URL
     // @return The absolute URL
-    auto relativeURLToAbsoluteURL = [&rootURL](const std::string& rawReference)
+    auto relativeURLToAbsoluteURL = [&rootURI](const std::string& rawReference)
     {
-        boost::network::uri::uri url(rootURL);
-        url << boost::network::uri::path(rawReference);
-        return url.string();    
+        URI relativeURI(rawReference);
+        if(!relativeURI.IsValid())
+        {
+            relativeURI.SetURL(rootURI, rawReference);
+        }
+        return relativeURI.GetURL();
     };
     std::vector<std::string> fileRawReferences = Parse(content);
     std::vector<std::string> fileFullReferences;

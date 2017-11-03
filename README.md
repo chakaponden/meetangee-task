@@ -29,11 +29,13 @@ The following packages are needed to build:
 * zlib 1.2.8
 * curl 7.47.0
 * gumbo 1.6.0
-* cpp-netlib 0.12.0
+* soup 2.4.0
+* glib 2.2.3
+* gtk 2.24.30
 
 Ubuntu 16.04 dependencies installation:
 
-    $ sudo apt-get install zlib1g-dev libcurl4-gnutls-dev libgumbo-dev libcppnetlib-dev libboost-test-dev
+    $ sudo apt-get install zlib1g-dev libcurl4-gnutls-dev libgumbo-dev libsoup2.4-dev libglib2.0-dev libgtk2.0-dev
 
 How to build
 -------------

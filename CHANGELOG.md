@@ -7,10 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ## [Todo]
-- remove dependence from [cpp-netlib](https://github.com/cpp-netlib/uri): create absolute URL and source URL validation without usage [boost::network::uri](https://github.com/cpp-netlib/uri/blob/master/src/uri.cpp)
-- thread safe HTTPDownloader
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
 - OOP code reuse
+- documentation and comments
+- refactoring
+- individual namespace for task classes
+
+## [1.3.0] - 2017-11-03
+### Changed
+- work with URL using [libsoup](https://github.com/GNOME/libsoup) - wrapper [URI](https://github.com/chakaponden/itransition-task/URI.h)
+
+### Removed
+- dependence from [cpp-netlib](https://github.com/cpp-netlib/uri)
+
+### Fixed
+- invalid absolute URL creation if HTML link value is already absolute URL
+- memory leaks with boost::network::uri
 
 ## [1.2.0] - 2017-11-03
 ### Added

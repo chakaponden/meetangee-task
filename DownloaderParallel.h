@@ -2,6 +2,8 @@
  * DownloaderParallel.h
  *
  * A simple C++ wrapper for the libcurl multiple API.
+ * Parallel curl handles execution
+ * using synchronous I/O multiplexing: select() call. 
  */
 #ifndef DOWNLOADERPARALLEL_H
 #define DOWNLOADERPARALLEL_H
@@ -12,8 +14,9 @@
 #include "ICurlEasyDownloader.h"
 
 /**
- * A non-threadsafe simple libcURL-easy based HTTP downloader
- * downloaded file content accessible by DownloaderParallel::GetContent()
+ * A threadsafe simple libcURL-multi based downloader:
+ * execute all CURL* handles from ICurlEasyDownloader
+ * using synchronous I/O multiplexing: select() call.
  */
 class DownloaderParallel
 {
@@ -21,12 +24,12 @@ public:
     DownloaderParallel();
     ~DownloaderParallel();
 
-    void AddDownloader(const ICurlEasyDownloader* downloaders);
-    void RemoveDownloader(const ICurlEasyDownloader* downloaders);
+    void AddDownloader(const ICurlEasyDownloader* downloader);
+    void RemoveDownloader(const ICurlEasyDownloader* downloader);
 
     /**
-     * Download a file using HTTP GET and store in in a std::string
-     * @return The download result
+     * Execute all CURL* handles from ICurlEasyDownloader
+     * @return The execution result code
      */
     int Download();
     int operator()();

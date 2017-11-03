@@ -2,6 +2,8 @@
  * DownloaderParallel.cpp
  *
  * A simple C++ wrapper for the libcurl multiple API.
+ * Parallel curl handles execution
+ * using synchronous I/O multiplexing: select() call. 
  */
 #include "DownloaderParallel.h"
 #include <curl/easy.h>

@@ -11,6 +11,8 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 file(GLOB SOURCES
 	main.cpp
+	URI.h
+	URI.cpp
     ICurlEasyDownloader.h
     DownloaderParallel.h
     DownloaderParallel.cpp
@@ -57,11 +59,19 @@ if(Gumbo_FOUND)
 	target_link_libraries(${PROJECT} ${Gumbo_LIBRARY})
 endif(Gumbo_FOUND)
 
-# cppnet lib include-link:
-# sudo apt-get install libcppnetlib-dev
-# sudo apt-get install libboost-test-dev
-find_package(cppnetlib REQUIRED)
-if(cppnetlib_FOUND)
-    include_directories (${CPPNETLIB_INCLUDE_DIRS})
-    target_link_libraries (${PROJECT} ${CPPNETLIB_LIBRARIES})
-endif(cppnetlib_FOUND)
+# libsoup lib include-link:
+# sudo apt-get install libsoup2.4-dev libglib2.0-dev
+find_package(LibSoup REQUIRED)
+if(LIBSOUP_FOUND)
+    include_directories (${LIBSOUP_INCLUDE_DIRS})
+    target_link_libraries (${PROJECT} ${LIBSOUP_LIBRARIES})
+endif(LIBSOUP_FOUND)
+
+# libgtk2.0 lib include-link:
+# sudo apt-get install libgtk2.0-dev
+find_package (PkgConfig REQUIRED)
+pkg_check_modules (GTK2 REQUIRED gtk+-2.0)
+if(GTK2_FOUND)
+	include_directories (${GTK2_INCLUDE_DIRS})
+	target_link_libraries (${PROJECT} ${GTK2_LIBRARIES})
+endif(GTK2_FOUND)

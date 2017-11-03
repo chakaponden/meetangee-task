@@ -2,15 +2,13 @@
 #include <string>
 #include <map>
 #include <tuple>
-#include <thread>
-#include <boost/network/uri.hpp>
-#include <boost/network/uri/uri_io.hpp>
 
 #include "DownloaderString.h"
 #include "DownloaderParallel.h"
 #include "HTMLParser.h"
 #include "Adler32Generator.h"
 #include "TextColor.hpp"
+#include "URI.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +19,10 @@ int main(int argc, char *argv[])
                   << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
         return 1;
     }
+    const std::string rootURL(argv[1]);
     // source HTML file URL validation
-    boost::network::uri::uri URL(argv[1]);
-    if(!URL.is_valid())
+    URI rootURI(rootURL);
+    if(!rootURI.IsValid())
     {
         std::cerr << "Error! Source HTML file URL is invalid." << std::endl
                   << "Specify valid HTML file URL as first cmd argument." << std::endl
@@ -32,13 +31,13 @@ int main(int argc, char *argv[])
     }
     // download html file content as string
     DownloaderString downloaderRoot;
-    downloaderRoot.SetURL(URL.string());
+    downloaderRoot.SetURL(rootURI.GetURL());
     downloaderRoot();
 
     HTMLParser parcer;
     std::vector<DownloaderStringShp> downloaders;
     DownloaderParallel downloaderParallel;
-    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(), URL.string()))
+    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(), downloaderRoot.GetURL()))
     {
         DownloaderStringShp downloaderSimple = std::make_shared<DownloaderString>();
         downloaderSimple->SetURL(hrefValue);
