@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.3.0] - 2017-11-03
 ### Changed
-- work with URL using [libsoup](https://github.com/GNOME/libsoup) - wrapper [URI](https://github.com/chakaponden/itransition-task/URI.h)
+- work with URL using [libsoup](https://github.com/GNOME/libsoup) - wrapper [URI](https://github.com/chakaponden/itransition-task/blob/dev/URI.h)
 
 ### Removed
 - dependence from [cpp-netlib](https://github.com/cpp-netlib/uri)
