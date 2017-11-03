@@ -11,7 +11,7 @@
 
 #include "ICurlEasyDownloader.h"
 /**
- * A non-threadsafe simple libcURL-easy based HTTP downloader
+ * A non-threadsafe simple libcURL-easy downloader
  * downloaded file content accessible by DownloaderString::GetContent()
  */
 class DownloaderString : public ICurlEasyDownloader
@@ -27,7 +27,7 @@ public:
     std::string GetContent() const;
 
     /**
-     * Download a file using HTTP GET and store in in a std::string
+     * Download a file and store it's content in a std::string
      * @return The download result
      */
     int Download();

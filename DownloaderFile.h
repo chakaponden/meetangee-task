@@ -10,7 +10,7 @@
 
 #include "ICurlEasyDownloader.h"
 /**
- * A non-threadsafe simple libcURL-easy based HTTP downloader
+ * A non-threadsafe simple libcURL-easy based downloader
  * save downloaded file on storage by file path
  */
 class DownloaderFile : public ICurlEasyDownloader
@@ -27,7 +27,7 @@ public:
     std::string GetFilePath() const;
 
     /**
-     * Download a file using HTTP GET and save file to file path
+     * Download a file and save file to file path
      * @return The download result
      */
     int Download();

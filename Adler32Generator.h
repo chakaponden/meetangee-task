@@ -19,6 +19,6 @@ public:
      * @param content The input data content
      * @return The hash result
      */
-    unsigned long Generate(const std::string& content);
+    static unsigned long Generate(const std::string& content);
 };
 #endif  /* ADLER32GENERATOR_H */
