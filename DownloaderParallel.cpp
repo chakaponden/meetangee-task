@@ -59,13 +59,13 @@ int DownloaderParallel::Download()
                     curl_multi_strerror(res));
             return 1;   
         }
-        auto convertMsecToTimeval = [](const long int& mSec) -> struct timeval
+        auto convertMsecToTimeval = [](const long int& mSec) -> timeval
         {
-            struct timeval time;
+            timeval time;
             /* set a suitable timeout to play around with */ 
             time.tv_sec = 1;
             time.tv_usec = 0;
-            // fill struct timeval from curlTimeo in msec
+            // fill timeval from curlTimeo in msec
             if(mSec >= 0)
             {
                 time.tv_sec = mSec / 1000;
@@ -99,7 +99,7 @@ int DownloaderParallel::Download()
 
             /* get value from curl - how long to wait for action before proceeding in msec */
             curl_multi_timeout(_curlMultiHandle, &curlTimeo);
-            struct timeval timeout = convertMsecToTimeval(curlTimeo);
+            timeval timeout = convertMsecToTimeval(curlTimeo);
             /* get file descriptors from the transfers */ 
             mc = curl_multi_fdset(_curlMultiHandle, &fdRead, &fdWrite, &fdExcep, &fdMaxNumber);
 
@@ -123,7 +123,7 @@ int DownloaderParallel::Download()
                     rc = 0;
                 #else
                     /* Portable sleep for platforms other than Windows. */ 
-                    struct timeval wait = { 0, 100 * 1000 }; /* 100ms */ 
+                    timeval wait = { 0, 100 * 1000 }; /* 100ms */ 
                     rc = select(0, NULL, NULL, NULL, &wait);
                 #endif
             }
