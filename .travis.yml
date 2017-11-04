@@ -36,13 +36,16 @@ before_install:
 
 install:
   - ./install-gumbo.sh
-  - sudo find -O3 / -name "*sonar.sh"
   # - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip -P /tmp
   # - unzip -qq /tmp/sonarqube-6.6.zip -d /tmp
   # - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARHOME/extensions/plugins
   # - $SONARHOME/bin/linux-x86-64/sonar.sh start
+  # - rm -f $SONARHOME -R
 
 script:
+  - sudo find -O3 / -name "*sonar.sh"
+  - sudo find -O3 / -name "*sonar-java-plugin*"
+
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
   - cmake .
@@ -52,9 +55,6 @@ script:
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
   - sonar-scanner
-  - rm -f $SONARHOME -R
-  - cat /home/travis/.sonarscanner/sonar-scanner-2.8/conf/sonar-scanner.properties
-  - ls .?*
 cache:
   directories:
     - '$HOME/.sonar/cache'
