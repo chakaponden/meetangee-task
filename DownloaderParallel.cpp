@@ -6,12 +6,12 @@
  * using synchronous I/O multiplexing: select() call. 
  */
 #include "DownloaderParallel.h"
+/* According to POSIX.1-2001 */
+#include <bits/time.h>
+#include <sys/select.h>
+#include <sys/types.h> 
 #include <curl/easy.h>
 #include <curl/curlbuild.h>
-/* According to POSIX.1-2001 */
-#include <sys/select.h>
-#include <bits/time.h>
-#include <sys/types.h> 
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
