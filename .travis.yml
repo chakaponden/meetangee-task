@@ -15,6 +15,7 @@ addons:
   sonarqube:
     branches:
         - dev
+        - coverity_scan
   sonarcloud:
     organization: "chakaponden-github"
   apt:
