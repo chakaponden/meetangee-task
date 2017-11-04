@@ -45,16 +45,20 @@ install:
   - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux.zip
   - echo "sonar.host.url=http://localhost:9001" >> /tmp/sonar-scanner-3.0.3.778-linux/conf/sonar-scanner.properties
 
+  - travis_retry wget -q https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -P /tmp
+  - unzip -qq /tmp/build-wrapper-linux-x86.zip -d /tmp/sonar-scanner-3.0.3.778-linux/bin
+  - rm -f /tmp/build-wrapper-linux-x86.zip
+
 script:
   - export SONARQUBE_SKIPPED=false
   - export SONAR_SCANNER_HOME=/tmp/sonar-scanner-3.0.3.778-linux
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  #- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
   - cmake .
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarQube Scanner) into the "bw-output" folder
-  - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
+  - /tmp/sonar-scanner-3.0.3.778-linux/bin/build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
   - sudo /tmp/sonar-scanner-3.0.3.778-linux/bin/sonar-scanner -X
