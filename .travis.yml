@@ -43,7 +43,7 @@ install:
   - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip -P /tmp
   - unzip -qq /tmp/sonar-scanner-cli-3.0.3.778-linux.zip -d /tmp
   - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux.zip
-  - echo "sonar.host.url=http://localhost:9001" >> /tmp/sonar-scanner-cli-3.0.3.778-linux/conf/sonar-scanner.properties
+  - echo "sonar.host.url=http://localhost:9001" >> /tmp/sonar-scanner-3.0.3.778-linux/conf/sonar-scanner.properties
 
 script:
   - export SONARQUBE_SKIPPED=false
