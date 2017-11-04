@@ -35,13 +35,7 @@ install:
   # - rakudobrew build-zef
   # - zef --/test --depsonly install .
 
-  - git clone https://github.com/google/gumbo-parser
-  - cd ./gumbo-parser
-  - ./autogen.sh
-  - ./configure
-  - make
-  - sudo make install
-  - cd ..
+  - ./install-gumbo.sh
 
   # - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip
   # - unzip -qq sonarqube-6.6.zip
