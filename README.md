@@ -1,7 +1,6 @@
 Task for Aleksandra Zabiran <a.zabiran@itransition.com> ITransition
 -------------------------------------------------------------------
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/chakaponden/itransition-task?branch=dev&svg=true)](https://ci.appveyor.com/project/chakaponden/itransition-task)
 [![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task)
 
 Your program must work and will be judged based on which algorithms, libraries you use, on code

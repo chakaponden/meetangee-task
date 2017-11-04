@@ -39,7 +39,7 @@ install:
 
   - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip -P /tmp
   - unzip -qq /tmp/sonarqube-6.6.zip
-  - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARQUBE_HOME/extensions/plugins
+  - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARHOME/extensions/plugins
   - $SONARHOME/bin/linux-x86-64/sonar.sh start
   - which sonar.sh
   - which wrapper
