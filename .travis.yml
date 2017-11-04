@@ -22,12 +22,6 @@ install:
   # - rakudobrew build-zef
   # - zef --/test --depsonly install .
 
-  - echo $SONARQUBE_HOME
-  - sonar-scanner -v
-  - echo $SONARQUBE_HOME
-  - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARQUBE_HOME/extensions/plugins
-  - echo $SONARQUBE_HOME
-
 script:
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
@@ -37,6 +31,13 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
+
+  - echo $SONARQUBE_HOME
+  - sonar-scanner -v
+  - echo $SONARQUBE_HOME
+  - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARQUBE_HOME/extensions/plugins
+  - echo $SONARQUBE_HOME
+  
   - sonar-scanner
 cache:
   directories:
