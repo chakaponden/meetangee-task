@@ -13,9 +13,19 @@ addons:
         - dev
 
 install:
-  - sudo apt-get install libgumbo-dev
-  
+  #- sudo apt-get install libgumbo-dev
+  # - git clone https://github.com/google/gumbo-parser.git
+  # - echo $PWD
+  # - ( cd gumbo-parser && ./autogen.sh && ./configure --prefix=$HOME/gumbo-parser && make install-exec )
+  # - rm -rf gumbo-parser
+  # - echo $PWD
+  # - rakudobrew build-zef
+  # - zef --/test --depsonly install .
+
 script:
+  # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
+  # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
+
   - cmake .
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarQube Scanner) into the "bw-output" folder
