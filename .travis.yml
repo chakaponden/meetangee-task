@@ -9,6 +9,9 @@ env:
 - SONARHOME=/tmp/sonarqube-6.6
 
 addons:
+  sonarqube:
+    branches:
+        - dev
   sonarcloud:
     organization: "chakaponden-github"
   apt:
@@ -23,28 +26,27 @@ addons:
         - libglib2.0-dev
         - libsoup2.4-dev
         - libgtk2.0-dev
-  sonarqube:
-    branches :
-        - dev
 
 before_install:
-  #- sudo apt-get -qq update
-  # for build google gumbo
-  #- sudo apt-get install -y -qq libtool m4 autotools-dev automake pkg-config libc6-dev
-  # dependencies
-  #- sudo apt-get install -y -qq libglib2.0-dev libsoup2.4-dev libgtk2.0-dev
 
 install:
   - ./install-gumbo.sh
   - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip -P /tmp
   - unzip -qq /tmp/sonarqube-6.6.zip -d /tmp
+  - rm -f /tmp/sonarqube-6.6.zip
   - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARHOME/extensions/plugins
   - echo "sonar.web.host=0.0.0.0" >> /tmp/sonarqube-6.6/conf/sonar.properties
-  - echo "sonar.web.port=9000" >> /tmp/sonarqube-6.6/conf/sonar.properties
+  - echo "sonar.web.port=9001" >> /tmp/sonarqube-6.6/conf/sonar.properties
   - $SONARHOME/bin/linux-x86-64/sonar.sh start
-  - sleep 40
+  - sleep 60
+
+  - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip -P /tmp
+  - unzip -qq /tmp/sonar-scanner-cli-3.0.3.778-linux.zip -d /tmp
+  - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux.zip
+  - echo "sonar.host.url=http://localhost:9001" >> /tmp/sonar-scanner-cli-3.0.3.778-linux/conf/sonar-scanner.properties
 
 script:
+  - export SONARQUBE_SKIPPED=false
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
   - cmake .
@@ -53,10 +55,10 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-  - sonar-scanner
-  - rm -f $SONARHOME -R
+  - /tmp/sonar-scanner-cli-3.0.3.778-linux/bin/sonar-scanner
   - $SONARHOME/bin/linux-x86-64/sonar.sh stop
+  - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux -R
+  - rm -f $SONARHOME -R
 cache:
   directories:
     - '$HOME/.sonar/cache'
-    
