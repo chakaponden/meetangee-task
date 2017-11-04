@@ -37,7 +37,7 @@ install:
   - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARHOME/extensions/plugins
   - echo "sonar.web.host=0.0.0.0" >> /tmp/sonarqube-6.6/conf/sonar.properties
   - echo "sonar.web.port=9001" >> /tmp/sonarqube-6.6/conf/sonar.properties
-  - $SONARHOME/bin/linux-x86-64/sonar.sh start
+  - sudo $SONARHOME/bin/linux-x86-64/sonar.sh start
   - sleep 60
 
   - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip -P /tmp
@@ -47,6 +47,8 @@ install:
 
 script:
   - export SONARQUBE_SKIPPED=false
+  - export SONAR_SCANNER_HOME=/tmp/sonar-scanner-3.0.3.778-linux
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
   - cmake .
@@ -55,8 +57,9 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-  - /tmp/sonar-scanner-3.0.3.778-linux/bin/sonar-scanner
-  - $SONARHOME/bin/linux-x86-64/sonar.sh stop
+  - sudo /tmp/sonar-scanner-3.0.3.778-linux/bin/sonar-scanner -X
+  - sudo /tmp/sonar-scanner-3.0.3.778-linux/bin/sonar-scanner
+  - sudo $SONARHOME/bin/linux-x86-64/sonar.sh stop
   - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux -R
   - rm -f $SONARHOME -R
 cache:
