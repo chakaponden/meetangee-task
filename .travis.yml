@@ -42,15 +42,9 @@ install:
   - echo "sonar.web.host=0.0.0.0" >> /tmp/sonarqube-6.6/conf/sonar.properties
   - echo "sonar.web.port=9000" >> /tmp/sonarqube-6.6/conf/sonar.properties
   - $SONARHOME/bin/linux-x86-64/sonar.sh start
+  - sleep 40
 
 script:
-  - sudo find -O3 / -name "*sonar-php-plugin*"
-  - sudo find -O3 / -name "*sonar-java-plugin*"
-  - sudo find / -name "*sonar*"
-  - sudo find -O3 / -name "*sonar.properties"
-  - sudo find -O3 / -name "*sonar-application*"
-
-
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
   - cmake .
@@ -61,6 +55,7 @@ script:
   # file to see the specific configuration
   - sonar-scanner
   - rm -f $SONARHOME -R
+  - $SONARHOME/bin/linux-x86-64/sonar.sh stop
 cache:
   directories:
     - '$HOME/.sonar/cache'

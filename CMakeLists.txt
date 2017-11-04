@@ -10,21 +10,9 @@ project(${PROJECT}
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 file(GLOB SOURCES
-	main.cpp
-	URI.h
-	URI.cpp
-    ICurlEasyDownloader.h
-    DownloaderParallel.h
-    DownloaderParallel.cpp
-    DownloaderString.h
-    DownloaderString.cpp
-    DownloaderFile.h
-    DownloaderFile.cpp
-    HTMLParser.h
-    HTMLParser.cpp
-    Adler32Generator.h
-    Adler32Generator.cpp
-    TextColor.hpp
+    src/*.h
+    src/*.cpp
+    src/*.hpp
 )
 add_executable(${PROJECT} ${SOURCES})
 

@@ -40,3 +40,4 @@ cmake_install.cmake
 
 # sonar-scanner
 bw_output/*
+.scannerwork/*
