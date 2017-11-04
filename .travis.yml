@@ -4,6 +4,8 @@ sudo: required
 addons:
   sonarcloud:
     organization: "chakaponden-github"
+branches :
+    - dev
 script:
   - cmake .
   # Wraps the compilation with the Build Wrapper to generate configuration (used
