@@ -43,8 +43,14 @@ install:
   # - rm -f $SONARHOME -R
 
 script:
-  - sudo find -O3 / -name "*sonar.sh"
+  - sudo find -O3 / -name "*sonar-php-plugin*"
   - sudo find -O3 / -name "*sonar-java-plugin*"
+  - sudo find -O3 / -name "*SonarQube.pid"
+  - sudo find -O3 / -name "*libwrapper.so"
+  - sudo find -O3 / -name "*wrapper"
+  - sudo find -O3 / -name "*sonar.properties"
+  - sudo find -O3 / -name "*sonar-application*"
+
 
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
