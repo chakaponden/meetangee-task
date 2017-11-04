@@ -5,12 +5,25 @@ language: c++
 compiler: gcc
 os: linux
 
+env:
+- SONARHOME=/tmp/sonarqube-6.6
+
 addons:
   sonarcloud:
     organization: "chakaponden-github"
+  apt:
+      packages:
+        - cmake
   sonarqube:
     branches :
         - dev
+
+before_install:
+  - sudo apt-get -qq update
+  # for build google gumbo
+  - sudo apt-get install -y libtool m4 autotools-dev automake
+  # dependencies
+  - sudo apt-get install -y libglib2.0-dev libsoup2.4-dev libgtk2.0-dev
 
 install:
   #- sudo apt-get install libgumbo-dev
@@ -22,6 +35,17 @@ install:
   # - rakudobrew build-zef
   # - zef --/test --depsonly install .
 
+  - git clone https://github.com/google/gumbo-parser
+  - cd ./gumbo-parser
+  - ./autogen.sh
+  - ./configure
+  - make
+  - sudo make install
+  - cd ..
+
+  # - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip
+  # - unzip -qq sonarqube-6.6.zip
+
 script:
   # - LD_LIBRARY_PATH=$HOME/gumbo-parser/lib zef install .
   # - PERL6LIB=$PWD/blib/lib LD_LIBRARY_PATH=$HOME/gumbo-parser/lib prove -e perl6 -vr t/
@@ -31,13 +55,9 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-
-  - echo $SONARQUBE_HOME
-  - sonar-scanner -v
-  - echo $SONARQUBE_HOME
-  - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARQUBE_HOME/extensions/plugins
-  - echo $SONARQUBE_HOME
-  
+  # - sonar-scanner -v
+  # - echo $SONARQUBE_HOME
+  # - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARQUBE_HOME/extensions/plugins
   - sonar-scanner
 cache:
   directories:
