@@ -1,11 +1,17 @@
 dist: trusty
 sudo: required
 
+language: c++
+compiler: gcc
+os: linux
+
 addons:
   sonarcloud:
     organization: "chakaponden-github"
-branches :
-    - dev
+  sonarqube:
+    branches :
+        - dev
+
 script:
   - cmake .
   # Wraps the compilation with the Build Wrapper to generate configuration (used
@@ -17,3 +23,7 @@ script:
 cache:
   directories:
     - '$HOME/.sonar/cache'
+
+install:
+  - sudo apt-get install libgumbo-dev
+    
