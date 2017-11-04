@@ -12,6 +12,9 @@ addons:
     branches :
         - dev
 
+install:
+  - sudo apt-get install libgumbo-dev
+  
 script:
   - cmake .
   # Wraps the compilation with the Build Wrapper to generate configuration (used
@@ -23,7 +26,4 @@ script:
 cache:
   directories:
     - '$HOME/.sonar/cache'
-
-install:
-  - sudo apt-get install libgumbo-dev
     
