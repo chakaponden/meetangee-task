@@ -1,16 +1,17 @@
 /**
- * DownloaderFile.cpp
- *
- * A simple C++ wrapper for the libcurl easy API.
+ * @file DownloaderFile.cpp
+ * @brief A simple file downloader and on storage saver implementation
  */
+
 #include "DownloaderFile.h"
-#include <curl/easy.h>
-#include <curl/curlbuild.h>
+
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
+#include <cstring>
 #include <errno.h>
+#include <curl/easy.h>
+#include <curl/curlbuild.h>
 
 DownloaderFile::DownloaderFile()
 {
@@ -97,7 +98,7 @@ int DownloaderFile::Download()
     {
         fprintf(stderr, "file %s is not opened\n",
                 _filePath.c_str());
-        return 2;
+        return 4;
     }
     else
     {

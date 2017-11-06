@@ -41,3 +41,9 @@ cmake_install.cmake
 # sonar-scanner
 bw_output/*
 .scannerwork/*
+
+# qtcreator project settings
+*.user
+
+# doxygen output
+doc/*

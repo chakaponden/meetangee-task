@@ -1,11 +1,16 @@
 /**
- * Gumbo.hpp
- *
- * Additional classes for easy work with Gumbo HTML5 parce lib.
- * Written by RPG-18 (https://github.com/RPG-18)
- * Published under MIT License (public domain)
- * https://github.com/RPG-18/EasyGumbo
+ * @file Gumbo.hpp
+ * @brief Simple easy use Google Gumbo lib wrapper
+ * @version 1.0.0
+ * @author RPG-18 (https://github.com/RPG-18)
+ * @date 12 April 2016
+ * @copyright MIT License
+ * @details Additional classes for easy work with Gumbo HTML5 parce lib
+ *          https://github.com/RPG-18/EasyGumbo
+ * @todo Refactoring, OOP-reuse to several classes and *.h + *.cpp files,
+ *       comments
  */
+
 #ifndef GUMBO_HPP
 #define GUMBO_HPP
 

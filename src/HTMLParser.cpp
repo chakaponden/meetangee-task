@@ -1,9 +1,8 @@
 /**
- * HTMLParser.cpp
- *
- * A simple C++ wrapper for the Gumbo HTML5 parser easy API.
- *
+ * @file HTMLParser.cpp
+ * @brief A simple wrapper for the Gumbo HTML5 parser easy API implementation
  */
+
 #include "HTMLParser.h"
 #include "Gumbo.hpp"
 #include "URI.h"

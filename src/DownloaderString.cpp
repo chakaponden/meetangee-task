@@ -1,16 +1,16 @@
 /**
- * DownloaderString.cpp
- *
- * A simple C++ wrapper for the libcurl easy API.
+ * @file DownloaderString.cpp
+ * @brief A simple file content downloader as std::string implementation
  */
+
 #include "DownloaderString.h"
-#include <curl/easy.h>
-#include <curl/curlbuild.h>
+
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
 #include <errno.h>
+#include <curl/easy.h>
+#include <curl/curlbuild.h>
 
 DownloaderString::DownloaderString()
 {

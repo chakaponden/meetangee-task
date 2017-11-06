@@ -1,21 +1,16 @@
 /**
- * DownloaderParallel.cpp
- *
- * A simple C++ wrapper for the libcurl multiple API.
- * Parallel curl handles execution
- * using synchronous I/O multiplexing: select() call. 
+ * @file DownloaderParallel.cpp
+ * @brief A several files parallel downloader implementation
  */
+
 #include "DownloaderParallel.h"
-/* According to POSIX.1-2001 */
-#include <bits/time.h>
+
 #include <sys/select.h>
-#include <sys/types.h> 
 #include <curl/easy.h>
 #include <curl/curlbuild.h>
 #include <sstream>
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
 #include <errno.h>
 
 DownloaderParallel::DownloaderParallel()
@@ -59,6 +54,7 @@ int DownloaderParallel::Download()
                     curl_multi_strerror(res));
             return 1;   
         }
+        // Fill timeval structure from msec
         auto convertMsecToTimeval = [](const long int& mSec) -> timeval
         {
             timeval time;
@@ -87,7 +83,7 @@ int DownloaderParallel::Download()
 
             fd_set fdRead;          // descriptors read
             fd_set fdWrite;         // descriptors write
-            fd_set fdExcep;         // descriptors read
+            fd_set fdExcep;         // descriptors exceptions
             int fdMaxNumber = -1;   // the highest descriptor number libcurl set
 
             long curlTimeo = -1;    // milliseconds
@@ -109,13 +105,11 @@ int DownloaderParallel::Download()
                     curl_multi_strerror(mc));
                 break;
             }
-
             /* On success the value of fdMaxNumber is guaranteed to be >= -1. We call
                select(fdMaxNumber + 1, ...); specially in case of (fdMaxNumber == -1) there are
                no fds ready yet so we call select(0, ...) --or Sleep() on Windows--
                to sleep 100ms, which is the minimum suggested value in the
-               curl_multi_fdset() doc. */ 
-
+               curl_multi_fdset() doc. */
             if(fdMaxNumber == -1)
             {
                 #ifdef _WIN32
@@ -133,7 +127,6 @@ int DownloaderParallel::Download()
                  If you need access to the original value save a copy beforehand. */ 
                 rc = select(fdMaxNumber + 1, &fdRead, &fdWrite, &fdExcep, &timeout);
             }
-
             switch(rc)
             {
                 case -1:    // select error

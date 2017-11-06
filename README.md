@@ -40,6 +40,21 @@ Ubuntu 16.04 dependencies installation:
 How to build
 -------------
 
-	$ cmake "path-to-sources"
+	$ cd <project_path>
+	$ cmake .
 	$ make
 	$ ./itransition-task http://www.meetangee.com
+
+The following packages are needed to generate documentation:
+
+* doxygen
+* graphviz
+
+Ubuntu 16.04 documentation dependencies installation:
+
+    $ sudo apt-get install doxygen graphviz
+
+How to generate documentation
+-------------
+
+	$ doxygen <project_path>/Doxyfile

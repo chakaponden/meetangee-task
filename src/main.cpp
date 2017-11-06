@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief A program entry point
+ */
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -7,29 +12,30 @@
 #include "DownloaderParallel.h"
 #include "HTMLParser.h"
 #include "Adler32Generator.h"
-#include "TextColor.hpp"
+#include "TextColor.h"
 #include "URI.h"
 
 int main(int argc, char *argv[])
 {
+    /// check input args for count
     if(argc < 2)
     {
         std::cerr << "You must specify:" << std::endl
-                << "source HTML file URL as first cmd argument." << std::endl
-                << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
+                  << "source HTML file URL as first cmd argument." << std::endl
+                  << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
         return 1;
     }
     const std::string rootURL(argv[1]);
-    // source HTML file URL validation
+    /// source HTML file URL validation
     URI rootURI(rootURL);
     if(!rootURI.IsValid())
     {
         std::cerr << "Error! Source HTML file URL is invalid." << std::endl
-                << "Specify valid HTML file URL as first cmd argument." << std::endl
-                << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
+                  << "Specify valid HTML file URL as first cmd argument." << std::endl
+                  << "Example: ./itransition-task http://www.meetangee.com" << std::endl;
         return 2;
     }
-    // download source HTML file content as string
+    /// download source HTML file content as string
     DownloaderString downloaderRoot;
     downloaderRoot.SetURL(rootURI.GetURL());
     downloaderRoot();
@@ -37,17 +43,21 @@ int main(int argc, char *argv[])
     HTMLParser parcer;
     std::vector<DownloaderStringShp> downloaders;
     DownloaderParallel downloaderParallel;
-    // parse download source HTML file content and loop for each parced link
-    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(), downloaderRoot.GetURL()))
+    /// parse download source HTML file content and loop for each parced link
+    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(),
+                                             downloaderRoot.GetURL()))
     {
-        DownloaderStringShp downloaderSimple = std::make_shared<DownloaderString>();
+        DownloaderStringShp downloaderSimple =
+                std::make_shared<DownloaderString>();
         downloaderSimple->SetURL(hrefValue);
         downloaders.push_back(downloaderSimple);
-        // simple downloader pass to parallel downloader
-        // for download all files in parallel
+        /**
+         * simple downloader pass to parallel downloader
+         * for download all files in parallel
+         */
         downloaderParallel.AddDownloader(downloaderSimple.get());
     }
-    // download all files in parallel
+    /// execute download all files in parallel
     downloaderParallel();
 
     /**
@@ -64,43 +74,50 @@ int main(int argc, char *argv[])
         downloadedFiles.insert(
                     std::pair<size_t, FileInfo>(contentRefFile.size(),
                                                 std::make_tuple(simpleDownloader->GetURL(),
-                                                                /* generate adler32 hash of file content */
+                                                                /// generate adler32 hash of file content
                                                                 Adler32Generator::Generate(contentRefFile),
                                                                 contentRefFile.size())));
     }
 
     if(!downloadedFiles.empty())
     {
-        const Color::TextColor red(Color::TextColorCode::FG_RED);
-        const Color::TextColor green(Color::TextColorCode::FG_GREEN);
-        const Color::TextColor yellow(Color::TextColorCode::FG_YELLOW);
-        const Color::TextColor def(Color::TextColorCode::FG_DEFAULT);
-        const Color::TextColor blue(Color::TextColorCode::FG_BLUE);
+        const Color::TextColor fileMaxSizeColor(
+                    Color::TextColorCode::FG_RED);      ///< file max size color
+        const Color::TextColor fileMinSizeColor(
+                    Color::TextColorCode::FG_GREEN);    ///< file min size color
+        const Color::TextColor fileOtherColor(
+                    Color::TextColorCode::FG_YELLOW);   ///< other files color
+        const Color::TextColor defaultTerminalColor(
+                    Color::TextColorCode::FG_DEFAULT);  ///< default terminal color
+        const Color::TextColor tableHeaderColor(
+                    Color::TextColorCode::FG_BLUE);     ///< table header info color
         const size_t fileSizeMax = downloadedFiles.rbegin()->first;
         const size_t fileSizeMin = downloadedFiles.begin()->first;
-        // header info blue color
-        std::cout << blue << "SIZE" << '\t' << "HASH" << "\t\t" << "FILE URL" << std::endl;
+        /// output colorized header info
+        std::cout << tableHeaderColor
+                  << "SIZE" << '\t' <<
+                     "HASH" << "\t\t" <<
+                     "FILE URL" << std::endl;
         std::map<size_t, FileInfo>::reverse_iterator it;
         for (it = downloadedFiles.rbegin(); it != downloadedFiles.rend(); ++it)
         {
             /**
+             * output colorized file info:
              * 0: file absolute URL
              * 1: file content adler32 hash
              * 2: file size in bytes
+             *
+             * output file information format:
+             * file size | file content adler32 hash | file absolute URL
              */
-            // file max size - red color
-            // file min size - green color
-            // other files   - yellow color
-            // output file information:
-            // file size | file content adler32 hash | file absolute URL
-            std::cout << (it->first == fileSizeMax ? red :
-                          it->first == fileSizeMin ? green : yellow)
+            std::cout << (it->first == fileSizeMax ? fileMaxSizeColor :
+                          it->first == fileSizeMin ? fileMinSizeColor : fileOtherColor)
                       << std::dec << std::get<2>(it->second) << '\t'
                       << std::hex << std::get<1>(it->second) << '\t'
                       << std::dec << std::get<0>(it->second) << std::endl;
         }
-        // reset terminal coloring
-        std::cout << def;
+        /// reset terminal color
+        std::cout << defaultTerminalColor;
     }
     return 0;
 }

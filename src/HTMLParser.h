@@ -1,15 +1,23 @@
 /**
- * HTMLParser.h
- *
- * A simple C++ wrapper for the Gumbo HTML5 parser easy API.
+ * @file HTMLParser.h
+ * @brief A simple wrapper for the Gumbo HTML5 parser easy API
  */
+
 #ifndef HTMLPARSER_H
 #define HTMLPARSER_H
+
 #include <string>
 #include <vector>
+
 /**
- * A simple Gumbo HTML5 parser
- * get all link references from HTML content
+ * @brief Get all link references from HTML content
+ *        using Gumbo HTML5 parser easy API
+ * @version 1.0.0
+ * @author chakaponden (itransition.com)
+ * @date 4 November 2017
+ * @copyright MIT License
+ * @details A simple C++ wrapper for the Gumbo HTML5 parser easy API
+ * @see Gumbo
  */
 class HTMLParser
 {
@@ -17,19 +25,21 @@ public:
     HTMLParser();
     ~HTMLParser();
     /**
-     * Parse a HTML structure store in a std::string using Gumbo HTML5 parser
-     * @param content The HTML content
-     * @return The raw parse result: vector of raw link references from HTML content
+     * @brief Parse a HTML content for all link references
+     * @param[in] content The HTML content to be parsed
+     * @return All raw link references from HTML content
      */
-    std::vector<std::string> Parse(const std::string& content);
+    static std::vector<std::string> Parse(const std::string& content);
 
     /**
-     * Parse a HTML structure store in a std::string using Gumbo HTML5 parser
-     * @param content The HTML content
-     * @param rootURL The root item URL from which relative full path result will be formed
-     * @return The absolute parse result: vector of absolute link references from HTML content
+     * @brief Parse a HTML content for all link references
+     * @param[in] content The HTML content to be parsed
+     * @param[in] rootURL The root item URL from which relative
+     *            full path result will be formed
+     * @return All absolute link references from HTML content
      */
-    std::vector<std::string> Parse(const std::string& content,
-                                   const std::string& rootURL);
+    static std::vector<std::string> Parse(const std::string& content,
+                                          const std::string& rootURL);
 };
+
 #endif  /* HTMLPARSER_H */
