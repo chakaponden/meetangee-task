@@ -19,14 +19,14 @@
 class Adler32Generator
 {
 public:
-    Adler32Generator();
-    ~Adler32Generator();
+    Adler32Generator() noexcept;
+    ~Adler32Generator() noexcept;
     /**
      * @brief Generate adler32 hash from data stored in std::string
      * @param[in] content Data from which hash to be generated
      * @return Adler32 Hash
      */
-    static unsigned long Generate(const std::string& content);
+    static unsigned long Generate(const std::string& content) noexcept;
 };
 
 #endif  /* ADLER32GENERATOR_H */

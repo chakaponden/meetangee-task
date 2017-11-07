@@ -40,10 +40,13 @@ Ubuntu 16.04 dependencies installation:
 How to build
 -------------
 
-	$ cd <project_path>
-	$ cmake .
+	$ cd <project_path>/build
+	$ cmake ..
 	$ make
-	$ ./itransition-task http://www.meetangee.com
+
+How to run
+-------------
+	$ <project_path>/build/itransition-task http://www.meetangee.com
 
 The following packages are needed to generate documentation:
 
@@ -57,4 +60,10 @@ Ubuntu 16.04 documentation dependencies installation:
 How to generate documentation
 -------------
 
-	$ doxygen <project_path>/Doxyfile
+	$ cd <project_path>/doc
+	$ doxygen ./Doxyfile
+
+How to build, generate documentation and run program at one
+-------------
+
+	$ <project_path>/build-and-run.sh

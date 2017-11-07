@@ -16,6 +16,20 @@ file(GLOB SOURCES
 )
 add_executable(${PROJECT} ${SOURCES})
 
+# add EasyGumbo subproject directory
+add_subdirectory(EasyGumbo)
+# EasyGumbo link lib
+target_link_libraries(${PROJECT} EasyGumbo)
+# include EasyGumbo source files location
+include_directories(EasyGumbo/src)
+
+# add EasyCurl subproject directory
+add_subdirectory(EasyCurl)
+# EasyCurl link lib
+target_link_libraries(${PROJECT} EasyCurl)
+# include EasyCurl source files location
+include_directories(EasyCurl/src)
+
 # name target executable with version
 # set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME ${PROJECT}-${PROJECT_VERSION})
 

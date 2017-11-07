@@ -13,11 +13,13 @@
 #include <curl/easy.h>
 #include <curl/curlbuild.h>
 
-DownloaderFile::DownloaderFile()
+using EasyCurl::DownloaderFile;
+
+DownloaderFile::DownloaderFile() throw (std::runtime_error)
 {
     if(!(_curlEasyHandle = curl_easy_init()))
     {
-        fprintf(stderr, "curl_easy_init() failed\n");
+        throw std::runtime_error("curl_easy_init() failed");
     }
     else
     {
@@ -35,7 +37,7 @@ DownloaderFile::DownloaderFile()
     }
 }
 
-DownloaderFile::~DownloaderFile()
+DownloaderFile::~DownloaderFile() noexcept
 {
     if(_curlEasyHandle)
     {
@@ -43,38 +45,39 @@ DownloaderFile::~DownloaderFile()
     }
 }
 
-void DownloaderFile::SetURL(const std::string& URL)
+void DownloaderFile::SetURL(const std::string& URL) noexcept
 {
     _URL = URL;
     curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
 }
 
-std::string DownloaderFile::GetURL() const
+std::string DownloaderFile::GetURL() const noexcept
 {
     return _URL;
 }
 
-void DownloaderFile::SetFilePath(const std::string& fullPath)
+void DownloaderFile::SetFilePath(const std::string& fullPath) throw (std::invalid_argument)
 {
     _filePath = fullPath;
     /* control what data CURLOPT_WRITEFUNCTION gets */
     _filePointer = fopen(_filePath.c_str(), "wb");
     if(_filePointer == NULL)
     {
-        fprintf(stderr, "fopen() failed: %s\n",
-                strerror(errno));
+        std::ostringstream outputstream;
+        outputstream << "fopen() failed: " << strerror(errno);
+        throw std::invalid_argument(outputstream.str());
         return;
     }
     curl_easy_setopt(_curlEasyHandle, CURLOPT_WRITEDATA, _filePointer);
 
 }
 
-std::string DownloaderFile::GetFilePath() const
+std::string DownloaderFile::GetFilePath() const noexcept
 {
     return _filePath;
 }
 
-int DownloaderFile::Download()
+void DownloaderFile::Download() throw (std::runtime_error)
 {
     if(_curlEasyHandle)
     {
@@ -83,43 +86,44 @@ int DownloaderFile::Download()
         /* Check for errors */
         if (res != CURLE_OK)
         {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                    curl_easy_strerror(res));
-            return 1;
+            std::ostringstream outputstream;
+            outputstream << "curl_easy_perform() failed: "
+                         << curl_easy_strerror(res);
+            throw std::runtime_error(outputstream.str());
         }
         if(fclose(_filePointer) == EOF)
         {
-            fprintf(stderr, "fclose() failed: %s\n",
-                    strerror(errno));
-            return 3;
+            std::ostringstream outputstream;
+            outputstream << "fclose() failed: "
+                         << strerror(errno);
+            throw std::runtime_error(outputstream.str());
         }
     }
     else if(_filePointer == NULL)
     {
-        fprintf(stderr, "file %s is not opened\n",
-                _filePath.c_str());
-        return 4;
+        std::ostringstream outputstream;
+        outputstream << "file " << _filePath.c_str()
+                     << "is not opened: " << strerror(errno);
+        throw std::runtime_error(outputstream.str());
     }
     else
     {
-        fprintf(stderr, "curl easy is not initialized\n");
-        return 2;
+        throw std::runtime_error("curl easy is not initialized");
     }
-    return 0;
 }
 
-int DownloaderFile::operator()()
+void DownloaderFile::operator()() throw (std::runtime_error)
 {
-    return Download();
+    Download();
 }
 
-size_t DownloaderFile::WriteDataFile(void* ptr, size_t size, size_t nmemb, FILE *stream)
+size_t DownloaderFile::WriteDataFile(void* ptr, size_t size, size_t nmemb, FILE *stream) noexcept
 {
     size_t written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
 
-CURL* DownloaderFile::GetCurlEasyHandler() const
+CURL* DownloaderFile::GetCurlEasyHandler() const noexcept
 {
     return _curlEasyHandle;
 }

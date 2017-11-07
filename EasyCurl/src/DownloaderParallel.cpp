@@ -13,15 +13,17 @@
 #include <stdio.h>
 #include <errno.h>
 
-DownloaderParallel::DownloaderParallel()
+using EasyCurl::DownloaderParallel;
+
+DownloaderParallel::DownloaderParallel() throw (std::runtime_error)
 {
     if(!(_curlMultiHandle = curl_multi_init()))
     {
-        fprintf(stderr, "curl_multi_init() failed\n");
+        throw std::runtime_error("curl_multi_init() failed");
     }
 }
 
-DownloaderParallel::~DownloaderParallel()
+DownloaderParallel::~DownloaderParallel() noexcept
 {
     if(_curlMultiHandle)
     {
@@ -29,17 +31,17 @@ DownloaderParallel::~DownloaderParallel()
     }
 }
 
-void DownloaderParallel::AddDownloader(const ICurlEasyDownloader* downloader)
+void DownloaderParallel::AddDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept
 {
     curl_multi_add_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
 }
 
-void DownloaderParallel::RemoveDownloader(const ICurlEasyDownloader* downloader)
+void DownloaderParallel::RemoveDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept
 {
     curl_multi_remove_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
 }
 
-int DownloaderParallel::Download()
+void DownloaderParallel::Download() throw (std::runtime_error)
 {
     if(_curlMultiHandle)
     {
@@ -50,9 +52,10 @@ int DownloaderParallel::Download()
         /* Check for errors */
         if(res != CURLM_OK)
         {
-            fprintf(stderr, "curl_multi_perform() failed: %s\n",
-                    curl_multi_strerror(res));
-            return 1;   
+            std::ostringstream outputstream;
+            outputstream << "curl_multi_perform() failed: "
+                         << curl_multi_strerror(res);
+            throw std::runtime_error(outputstream.str());
         }
         // Fill timeval structure from msec
         auto convertMsecToTimeval = [](const long int& mSec) -> timeval
@@ -101,8 +104,10 @@ int DownloaderParallel::Download()
 
             if(mc != CURLM_OK)
             {
-                fprintf(stderr, "curl_multi_fdset() failed, code %s.\n",
-                    curl_multi_strerror(mc));
+//                std::ostringstream outputstream;
+//                outputstream << "curl_multi_fdset() failed: "
+//                             << curl_multi_strerror(mc);
+//                throw std::runtime_error(outputstream.str());
                 break;
             }
             /* On success the value of fdMaxNumber is guaranteed to be >= -1. We call
@@ -140,9 +145,10 @@ int DownloaderParallel::Download()
                     /* Check for errors */
                     if(res != CURLM_OK)
                     {
-                        fprintf(stderr, "curl_multi_perform() failed: %s\n",
-                                curl_multi_strerror(res));
-                        return 1;   
+                        std::ostringstream outputstream;
+                        outputstream << "curl_multi_perform() failed: "
+                                     << curl_multi_strerror(res);
+                        throw std::runtime_error(outputstream.str());
                     }
                     break;
                 }
@@ -151,13 +157,11 @@ int DownloaderParallel::Download()
     }
     else
     {
-        fprintf(stderr, "curl multi is not initialized\n");
-        return 2;
+        throw std::runtime_error("curl multi is not initialized");
     }
-    return 0;
 }
 
-int DownloaderParallel::operator()()
+void DownloaderParallel::operator()() throw (std::runtime_error)
 {
-    return Download();
+    Download();
 }

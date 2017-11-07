@@ -9,14 +9,17 @@
 #include <iostream>
 #include <stdio.h>
 #include <errno.h>
+#include <sstream>
 #include <curl/easy.h>
 #include <curl/curlbuild.h>
 
-DownloaderString::DownloaderString()
+using EasyCurl::DownloaderString;
+
+DownloaderString::DownloaderString() throw (std::runtime_error)
 {
     if(!(_curlEasyHandle = curl_easy_init()))
     {
-        fprintf(stderr, "curl_easy_init() failed\n");
+        throw std::runtime_error("curl_easy_init() failed");
     }
     else
     {
@@ -36,7 +39,7 @@ DownloaderString::DownloaderString()
     }
 }
 
-DownloaderString::~DownloaderString()
+DownloaderString::~DownloaderString() noexcept
 {
     if(_curlEasyHandle)
     {
@@ -44,23 +47,23 @@ DownloaderString::~DownloaderString()
     }
 }
 
-void DownloaderString::SetURL(const std::string& URL)
+void DownloaderString::SetURL(const std::string& URL) noexcept
 {
     _URL = URL;
     curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
 }
 
-std::string DownloaderString::GetURL() const
+std::string DownloaderString::GetURL() const noexcept
 {
     return _URL;
 }
 
-std::string DownloaderString::GetContent() const
+std::string DownloaderString::GetContent() const noexcept
 {
     return _content;
 }
 
-int DownloaderString::Download()
+void DownloaderString::Download() throw (std::runtime_error)
 {
     _content.clear();
     if(_curlEasyHandle)
@@ -70,31 +73,30 @@ int DownloaderString::Download()
         /* Check for errors */
         if(res != CURLE_OK)
         {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                    curl_easy_strerror(res));
-            return 1;
+            std::ostringstream outputstream;
+            outputstream << "curl_easy_perform() failed: "
+                         << curl_easy_strerror(res);
+            throw std::runtime_error(outputstream.str());
         }
     }
     else
     {
-        fprintf(stderr, "curl easy is not initialized\n");
-        return 2;
+        throw std::runtime_error("curl easy is not initialized");
     }
-    return 0;
 }
 
-int DownloaderString::operator()()
+void DownloaderString::operator()() throw (std::runtime_error)
 {
-    return Download();
+    Download();
 }
 
-size_t DownloaderString::WriteData(void* buffer, size_t size, size_t nmemb, std::string* userp)
+size_t DownloaderString::WriteData(void* buffer, size_t size, size_t nmemb, std::string* userp) noexcept
 {
     userp->append(static_cast<char*>(buffer), size * nmemb);
     return size * nmemb;
 }
 
-CURL* DownloaderString::GetCurlEasyHandler() const
+CURL* DownloaderString::GetCurlEasyHandler() const noexcept
 {
     return _curlEasyHandle;
 }

@@ -5,23 +5,23 @@
 
 #include "URI.h"
 
-URI::URI() :
+URI::URI() noexcept :
     _soup(nullptr)
 {
 }
 
 URI::URI(const URI& base,
-         const std::string& relative) : URI::URI()
+         const std::string& relative) noexcept : URI::URI()
 {
     SetURL(base, relative);
 }
 
-URI::URI(const std::string& absolute) : URI::URI()
+URI::URI(const std::string& absolute) noexcept : URI::URI()
 {
     SetURL(absolute);
 }
 
-URI::~URI()
+URI::~URI() noexcept
 {
     if(_soup)
     {
@@ -30,7 +30,7 @@ URI::~URI()
 }
 
 void URI::SetURL(const URI& base,
-                  const std::string& relative)
+                  const std::string& relative) noexcept
 {
     if(_soup)
     {
@@ -42,7 +42,7 @@ void URI::SetURL(const URI& base,
         _soup = nullptr;
 }
 
-void URI::SetURL(const std::string& value)
+void URI::SetURL(const std::string& value) noexcept
 {
     if(_soup)
     {
@@ -51,7 +51,7 @@ void URI::SetURL(const std::string& value)
     _soup = soup_uri_new(value.c_str());
 }
 
-std::string URI::GetURL() const
+std::string URI::GetURL() const noexcept
 {
     if(SOUP_URI_IS_VALID(_soup))
     {
@@ -63,7 +63,7 @@ std::string URI::GetURL() const
     return std::string();
 }
 
-void URI::SetScheme(const std::string& value)
+void URI::SetScheme(const std::string& value) noexcept
 {
     if(_soup)
     {
@@ -71,7 +71,7 @@ void URI::SetScheme(const std::string& value)
     }
 }
 
-std::string URI::GetScheme() const
+std::string URI::GetScheme() const noexcept
 {
     if(SOUP_URI_IS_VALID(_soup))
     {
@@ -83,7 +83,7 @@ std::string URI::GetScheme() const
     return std::string();
 }
 
-void URI::SetHost(const std::string& value)
+void URI::SetHost(const std::string& value) noexcept
 {
     if(_soup)
     {
@@ -91,7 +91,7 @@ void URI::SetHost(const std::string& value)
     }
 }
 
-std::string URI::GetHost() const
+std::string URI::GetHost() const noexcept
 {
     if(SOUP_URI_IS_VALID(_soup))
     {
@@ -103,12 +103,23 @@ std::string URI::GetHost() const
     return std::string();
 }
 
-bool URI::IsValid() const
+bool URI::IsValid() const noexcept
 {
     return SOUP_URI_IS_VALID(_soup);
 }
 
-SoupURI* URI::GetSoup() const
+bool URI::IsValid(const std::string& absoluteURL) noexcept
+{
+    SoupURI* soup = soup_uri_new(absoluteURL.c_str());
+    bool isValid = SOUP_URI_IS_VALID(soup);
+    if(soup)
+    {
+        soup_uri_free(soup);
+    }
+    return isValid;
+}
+
+SoupURI* URI::GetSoup() const noexcept
 {
     return _soup;
 }

@@ -35,17 +35,17 @@ namespace Color
          * @brief Construct functor according Color::TextColorCode
          * @param[in] colorCode Text color
          */
-        TextColor(const Color::TextColorCode& colorCode);
+        TextColor(const Color::TextColorCode& colorCode) noexcept;
         /**
          * @brief Set color code
          * @param[in] colorCode code of color Color::TextColorCode
          */
-        void SetCode(const Color::TextColorCode& colorCode);
+        void SetCode(const Color::TextColorCode& colorCode) noexcept;
         /**
          * @brief Get color code
          * @return Color code as Color::TextColorCode
          */
-        Color::TextColorCode GetCode() const;
+        Color::TextColorCode GetCode() const noexcept;
         /**
          * @brief Provides functor functionality
          * @param[out] os Output stream where color code will be written
@@ -54,7 +54,7 @@ namespace Color
          * @return Modified output stream where color code will be written
          */
         friend std::ostream& operator <<(std::ostream& os,
-                                         const Color::TextColor& mod)
+                                         const Color::TextColor& mod) noexcept
         {
            /**
              * "\033[" Is the beginning of the escape

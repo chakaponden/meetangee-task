@@ -3,42 +3,51 @@
  * @brief A simple wrapper for the Gumbo HTML5 parser easy API implementation
  */
 
-#include "HTMLParser.h"
-#include "Gumbo.hpp"
 #include "URI.h"
 #include <sstream>
 #include <iostream>
 #include <algorithm>
 
-HTMLParser::HTMLParser()
+#include "HTMLParser.h"
+
+// EasyGumbo lib source files
+#include "Gumbo.h"
+#include "DFSIterator.h"
+#include "Tag.h"
+#include "Element.h"
+#include "HasAttribute.h"
+#include "Operations.hpp"
+
+HTMLParser::HTMLParser() noexcept
 {
 }
 
-HTMLParser::~HTMLParser()
+HTMLParser::~HTMLParser() noexcept
 {
 }
 
-std::vector<std::string> HTMLParser::Parse(const std::string& content)
+std::vector<std::string> HTMLParser::Parse(const std::string& content) noexcept
 {
     const char* attribute = "href";
     std::vector<std::string> fileRawReferences;
     EasyGumbo::Gumbo parser(content.c_str());
-    EasyGumbo::Gumbo::iterator iter = parser.begin();
+    EasyGumbo::DFSIterator iter = parser.Begin();
     // loop for each Dom node EasyGumbo::Element with link
     while((iter =
-        std::find_if(iter, parser.end(),
-            And(EasyGumbo::Tag(GUMBO_TAG_LINK),
-                EasyGumbo::HasAttribute(attribute)))) != parser.end())
+           std::find_if(iter, parser.End(),
+                        EasyGumbo::And(
+                            EasyGumbo::Tag(GUMBO_TAG_LINK),
+                            EasyGumbo::HasAttribute(attribute)))) != parser.End())
     {
         // save every link value
         EasyGumbo::Element node(*iter++);
-        fileRawReferences.push_back(std::string(node.attribute(attribute)->value));
+        fileRawReferences.push_back(std::string(node.Attribute(attribute)->value));
     }
     return fileRawReferences;
 }
 
 std::vector<std::string> HTMLParser::Parse(const std::string& content,
-                                           const std::string& rootURL)
+                                           const std::string& rootURL) noexcept
 {
     URI rootURI(rootURL);
     // lambda convert relative URL to absolute URL

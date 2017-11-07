@@ -22,14 +22,14 @@
 class HTMLParser
 {
 public:
-    HTMLParser();
-    ~HTMLParser();
+    HTMLParser() noexcept;
+    ~HTMLParser() noexcept;
     /**
      * @brief Parse a HTML content for all link references
      * @param[in] content The HTML content to be parsed
      * @return All raw link references from HTML content
      */
-    static std::vector<std::string> Parse(const std::string& content);
+    static std::vector<std::string> Parse(const std::string& content) noexcept;
 
     /**
      * @brief Parse a HTML content for all link references
@@ -39,7 +39,7 @@ public:
      * @return All absolute link references from HTML content
      */
     static std::vector<std::string> Parse(const std::string& content,
-                                          const std::string& rootURL);
+                                          const std::string& rootURL) noexcept;
 };
 
 #endif  /* HTMLPARSER_H */

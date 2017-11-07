@@ -1,4 +1,4 @@
-# bash
+#!/bin/bash
 # install google gumbo parcer from git sources
 git clone https://github.com/google/gumbo-parser
 cd ./gumbo-parser

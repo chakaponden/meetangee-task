@@ -8,9 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Todo]
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
+
+## [1.5.0] - 2017-11-08
+### Changed
+- refactoring Gumbo Easy API to EasyGumbo static lib
+- refactoring to EasyCurl static lib
 - OOP code reuse
-- refactoring Gumbo Easy API
 - individual namespace for task classes
+- migration from error codes to c++ exceptions
+
+### Added
+- doxygen documentation generation EasyGumbo lib
 
 ## [1.4.0] - 2017-11-07
 ### Added

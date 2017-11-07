@@ -7,17 +7,17 @@
 
 using Color::TextColor;
 
-TextColor::TextColor(const Color::TextColorCode& colorCode) :
+TextColor::TextColor(const Color::TextColorCode& colorCode) noexcept :
     _code(colorCode)
 {
 }
 
-void TextColor::SetCode(const Color::TextColorCode& colorCode)
+void TextColor::SetCode(const Color::TextColorCode& colorCode) noexcept
 {
     _code = colorCode;
 }
 
-Color::TextColorCode TextColor::GetCode() const
+Color::TextColorCode TextColor::GetCode() const noexcept
 {
     return _code;
 }

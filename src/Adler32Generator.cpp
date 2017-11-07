@@ -8,15 +8,15 @@
 #include <iostream>
 #include <string>
 
-Adler32Generator::Adler32Generator()
+Adler32Generator::Adler32Generator() noexcept
 {
 }
 
-Adler32Generator::~Adler32Generator()
+Adler32Generator::~Adler32Generator() noexcept
 {
 }
 
-unsigned long Adler32Generator::Generate(const std::string& content)
+unsigned long Adler32Generator::Generate(const std::string& content) noexcept
 {
     // initial checksum according zlib usage manual
     unsigned long adler = adler32(0L, Z_NULL, 0);
