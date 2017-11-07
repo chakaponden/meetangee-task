@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Todo]
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
+- coverity scan travis configuration
 
 ## [1.5.0] - 2017-11-08
 ### Changed
