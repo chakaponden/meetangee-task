@@ -76,11 +76,6 @@ int main(int argc, char *argv[])
         for (it = resultContainerData.rbegin(); it != resultContainerData.rend(); ++it)
         {
             /**
-             * Output colorized file info:
-             * 0: file absolute URL
-             * 1: file content adler32 hash
-             * 2: file size in bytes
-             *
              * Output file information format:
              * File size | File content adler32 hash | File absolute URL
              */
