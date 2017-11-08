@@ -1,7 +1,7 @@
 Task for Aleksandra Zabiran <a.zabiran@itransition.com> ITransition
 -------------------------------------------------------------------
 
-[![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=itransition:task:dev)](https://sonarcloud.io/dashboard?id=itransition%3Atask%3Adev)
+[![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=itransition:task:dev)](https://sonarcloud.io/dashboard?id=itransition:task:dev)
 
 Your program must work and will be judged based on which algorithms, libraries you use, on code
 structure and documentation (must be in English). You can use any information source you wish and take
