@@ -11,13 +11,17 @@ env:
    #   via the "travis encrypt" command using the project repo's public key
    - secure: "gQQVH/0kTrG+95BO++XwtbuSJGc4Od004fuo4r379+ZBugB/feyagDh7GRtPjcctssdXDRChbx7bNGq3osH6HIRp3Jzozp/eCMVs5fgTj0/6HwmoRaZeDSnJke60rLTZ11J0bQSjlFY482n7SMIkcGjw2tvuLi46QkBq5TM0FKwPTDjb2OJmWApFLj7JzyijNHEBvTuiMAerlE3/g60nAZbgTcCBMqy7YQ4ZL8NOsXmq80WlgqrArT35JSPJboi8e+UKH1zvMgQPdmBSM8OREAXjZw9icVpT1f8H4Jnt6D8I1DC906Ich73yPaicp2lv9nEUlXLg/H+o9Q4RdegJPQFS+rMwmHe8b/jqlO6BOb6L3NWp1l44q4+8cjatlHy9VF8kKJCf3KzIVjyzzedkXsnOuHKciePVBg+w+JF1gA7u3NFSsdXJYaKa1AteDpkXCCn8DX525jEZk9vnEqi8x26E+9doOcuy25cG4JoRBFyGyQvx9dLCPMzlOUBAH+eDUUcGdmdQj0AbdMmRoIo9k7t3fRkc6evecD1Yw3ABdmtjPr97FA/Q7M4JSLoYhYanGCySN/HiwvPuttfNiL+JCFXYeGSy7YG3NSAmWNfepEfBDwcSITwC9cZvzix2c6q+NbEZQtOw2GL4RlFx8UNBUB+oai1UZqlHjaun2gtNgiI="
 
+branches:
+  only:
+    - dev
+    - coverity_scan
 addons:
-  sonarqube:
-    branches:
-        - dev
-        - coverity_scan
   sonarcloud:
     organization: "chakaponden-github"
+  sonarqube:
+    branches:
+      - dev
+      - coverity_scan
   apt:
       packages:
         - cmake
@@ -67,7 +71,7 @@ install:
   # - rm -f /tmp/build-wrapper-linux-x86.zip
 
 script:
-  #- export SONARQUBE_SKIPPED=false
+  - export SONARQUBE_SKIPPED=false
   #- export SONAR_SCANNER_HOME=/tmp/sonar-scanner-3.0.3.778-linux
 
   - cmake .
