@@ -13,6 +13,7 @@ env:
 
 branches:
   only:
+    - master
     - dev
     - coverity_scan
 addons:
@@ -20,6 +21,7 @@ addons:
     organization: "chakaponden-github"
   sonarqube:
     branches:
+      - master
       - dev
       - coverity_scan
   apt:
