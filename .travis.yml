@@ -17,6 +17,8 @@ branches:
 addons:
   sonarcloud:
     organization: "chakaponden-github"
+    branches:
+      - dev
   apt:
       packages:
         - cmake
@@ -45,6 +47,7 @@ install:
   - ./install-gumbo.sh
 
 script:
+  - export SONARQUBE_SKIPPED=false
   - cmake .
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   - sonar-scanner

@@ -1,7 +1,7 @@
 Task for Aleksandra Zabiran <a.zabiran@itransition.com> ITransition
 -------------------------------------------------------------------
 
-[![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task)
+[![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=itransition:task)](https://sonarcloud.io/dashboard?id=itransition%3Atask)
 
 Your program must work and will be judged based on which algorithms, libraries you use, on code
 structure and documentation (must be in English). You can use any information source you wish and take
@@ -21,7 +21,7 @@ command line. Highlight the biggest and smallest (in size) file.
 
 Requirements
 ------------
-	
+
 The following packages are needed to build:
 
 * gcc 5.4.0
