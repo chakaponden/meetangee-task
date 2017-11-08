@@ -53,7 +53,7 @@ FileInfoContainerShp Controller::Execute() throw (std::runtime_error, std::inval
     {
         downloaderRoot();
     }
-    catch(std::runtime_error exception)
+    catch(const std::runtime_error& exception)
     {
         // pass current exception to the top
         throw;
@@ -80,7 +80,7 @@ FileInfoContainerShp Controller::Execute() throw (std::runtime_error, std::inval
     {
         downloaderParallel();
     }
-    catch(std::runtime_error exception)
+    catch(const std::runtime_error& exception)
     {
         // pass current exception to the top
         throw;

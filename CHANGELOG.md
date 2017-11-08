@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
 - coverity scan travis configuration
 
+## [1.5.2] - 2017-11-08
+### Fixed
+- SonarCloud integration for dev branch only
+
 ## [1.5.1] - 2017-11-08
 ### Fixed
 - SonarCloud integration

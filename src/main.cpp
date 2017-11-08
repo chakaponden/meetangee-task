@@ -36,12 +36,12 @@ int main(int argc, char *argv[])
     {
         facade.Execute();
     }
-    catch(std::invalid_argument exception)
+    catch(const std::invalid_argument& exception)
     {
         std::cerr << exception.what() << std::endl;
         return 3;
     }
-    catch(std::runtime_error exception)
+    catch(const std::runtime_error& exception)
     {
         std::cerr << exception.what() << std::endl;
         return 4;

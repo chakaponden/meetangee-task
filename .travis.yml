@@ -1,19 +1,18 @@
 dist: trusty
 sudo: required
 
-language: cpp
+language: c++
 compiler: gcc
 os: linux
 
 env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
+   # via the "travis encrypt" command using the project repo's public key
    - secure: "gQQVH/0kTrG+95BO++XwtbuSJGc4Od004fuo4r379+ZBugB/feyagDh7GRtPjcctssdXDRChbx7bNGq3osH6HIRp3Jzozp/eCMVs5fgTj0/6HwmoRaZeDSnJke60rLTZ11J0bQSjlFY482n7SMIkcGjw2tvuLi46QkBq5TM0FKwPTDjb2OJmWApFLj7JzyijNHEBvTuiMAerlE3/g60nAZbgTcCBMqy7YQ4ZL8NOsXmq80WlgqrArT35JSPJboi8e+UKH1zvMgQPdmBSM8OREAXjZw9icVpT1f8H4Jnt6D8I1DC906Ich73yPaicp2lv9nEUlXLg/H+o9Q4RdegJPQFS+rMwmHe8b/jqlO6BOb6L3NWp1l44q4+8cjatlHy9VF8kKJCf3KzIVjyzzedkXsnOuHKciePVBg+w+JF1gA7u3NFSsdXJYaKa1AteDpkXCCn8DX525jEZk9vnEqi8x26E+9doOcuy25cG4JoRBFyGyQvx9dLCPMzlOUBAH+eDUUcGdmdQj0AbdMmRoIo9k7t3fRkc6evecD1Yw3ABdmtjPr97FA/Q7M4JSLoYhYanGCySN/HiwvPuttfNiL+JCFXYeGSy7YG3NSAmWNfepEfBDwcSITwC9cZvzix2c6q+NbEZQtOw2GL4RlFx8UNBUB+oai1UZqlHjaun2gtNgiI="
 
 branches:
   only:
-    - master
     - dev
 addons:
   sonarcloud:
@@ -45,46 +44,10 @@ before_install:
 install:
   - ./install-gumbo.sh
 
-  ## install sonar server, run on 9001 port
-  # - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.6.zip -P /tmp
-  # - unzip -qq /tmp/sonarqube-6.6.zip -d /tmp
-  # - rm -f /tmp/sonarqube-6.6.zip
-  # - travis_retry wget -q https://github.com/SonarOpenCommunity/sonar-cxx/releases/download/cxx-0.9.7/sonar-cxx-plugin-0.9.7.jar -P $SONARHOME/extensions/plugins
-  # - echo "sonar.web.host=0.0.0.0" >> /tmp/sonarqube-6.6/conf/sonar.properties
-  # - echo "sonar.web.port=9001" >> /tmp/sonarqube-6.6/conf/sonar.properties
-  # - sudo $SONARHOME/bin/linux-x86-64/sonar.sh start
-  # - sleep 60
-
-  ## install sonar-scanner, run on 9001 port
-  # - travis_retry wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip -P /tmp
-  # - unzip -qq /tmp/sonar-scanner-cli-3.0.3.778-linux.zip -d /tmp
-  # - rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux.zip
-  # - echo "sonar.host.url=http://localhost:9001" >> /tmp/sonar-scanner-3.0.3.778-linux/conf/sonar-scanner.properties
-
-  ## install build-wrapper for sonar-scanner in sonar-scanner/bin dir
-  # - travis_retry wget -q https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -P /tmp
-  # - unzip -qq /tmp/build-wrapper-linux-x86.zip -d /tmp/sonar-scanner-3.0.3.778-linux/bin
-  # - rm -f /tmp/build-wrapper-linux-x86.zip
-
 script:
-  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-  #- export SONAR_SCANNER_HOME=/tmp/sonar-scanner-3.0.3.778-linux
-
   - cmake .
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
-  # no licence for c++ sonar for linux
-  - if [ "$BRANCH" == "master" ]; then sonar-scanner; fi
-
-  # Wraps the compilation with the Build Wrapper to generate configuration (used
-  # later by the SonarQube Scanner) into the "bw-output" folder
-  #- /tmp/sonar-scanner-3.0.3.778-linux/bin/build-wrapper-linux-x86-64 --out-dir bw_output make clean all
-  # And finally run the SonarQube analysis - read the "sonar-project.properties"
-  # file to see the specific configuration
-  #- sudo /tmp/sonar-scanner-3.0.3.778-linux/bin/sonar-scanner -X
-  # - sudo $SONARHOME/bin/linux-x86-64/sonar.sh stop
-  # - sudo rm -f /tmp/sonar-scanner-cli-3.0.3.778-linux -R
-  # - sudo rm -f $SONARHOME -R
+  - sonar-scanner
 cache:
   directories:
     - '$HOME/.sonar/cache'
