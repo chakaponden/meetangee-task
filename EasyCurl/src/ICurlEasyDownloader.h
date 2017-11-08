@@ -26,6 +26,7 @@ namespace EasyCurl
     class ICurlEasyDownloader
     {
     public:
+    	virtual ~ICurlEasyDownloader() {}
         /**
          * @brief Get libcURL-easy API object-provider download process
          * @return LibcURL-easy API object pointer
