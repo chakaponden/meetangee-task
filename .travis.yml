@@ -15,15 +15,9 @@ branches:
   only:
     - master
     - dev
-    - coverity_scan
 addons:
   sonarcloud:
     organization: "chakaponden-github"
-  sonarqube:
-    branches:
-      - master
-      - dev
-      - coverity_scan
   apt:
       packages:
         - cmake
@@ -73,13 +67,16 @@ install:
   # - rm -f /tmp/build-wrapper-linux-x86.zip
 
 script:
-  - export SONARQUBE_SKIPPED=false
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   #- export SONAR_SCANNER_HOME=/tmp/sonar-scanner-3.0.3.778-linux
 
   - cmake .
   - build-wrapper-linux-x86-64 --out-dir bw_output make clean all
   # no licence for c++ sonar for linux
-  - sonar-scanner
+  - 'if ["$BRANCH" == "master"]; then
+       sonar-scanner;
+    fi'
 
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarQube Scanner) into the "bw-output" folder
