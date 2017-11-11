@@ -3,8 +3,8 @@
  * @brief A several files parallel downloader
  */
 
-#ifndef DOWNLOADERPARALLEL_H
-#define DOWNLOADERPARALLEL_H
+#ifndef DOWNLOADERPARALLELSELECT_H
+#define DOWNLOADERPARALLELSELECT_H
 
 #include <string>
 #include <vector>
@@ -18,25 +18,26 @@ namespace EasyCurl
 {
     /**
      * @brief Download several files in parallel using libcurl multi API and
-     *        curl_multi_wait() call
+     *        POSIX synchronous I/O multiplexing select() call
      * @version 1.0.0
      * @author chakaponden (itransition.com)
      * @date 4 November 2017
      * @copyright MIT License
      * @details A threadsafe simple libcURL-multi based downloader:
      *          parallel easy curl handles execution
-     *          using curl_multi_wait() call
+     *          using synchronous I/O multiplexing: select() call.
      * @warning All easy curl handles (ICurlEasyDownloader downloaders) data
      *          must by ready and only wait for curl_easy_perform() call
-     * @warning Encouraged to be used instead of DownloaderParallelSelect class
-     *          because DownloaderParallelSelect has limitation with
-     *          1024 maximum downloads at once
+     * @warning Limitation: 1024 maximum parallel downloads, because
+     *          POSIX select() call has common problem with
+     *          1024 maximum file descriptors
+     * @todo Implementation with epoll() system call
      */
-    class DownloaderParallel
+    class DownloaderParallelSelect
     {
     public:
-        DownloaderParallel() throw (std::runtime_error);
-        ~DownloaderParallel() noexcept;
+        DownloaderParallelSelect() throw (std::runtime_error);
+        ~DownloaderParallelSelect() noexcept;
 
         /**
          * @brief Append ICurlEasyDownloader derivative downloader
@@ -66,4 +67,4 @@ namespace EasyCurl
     };
 }
 
-#endif  /* DOWNLOADERPARALLEL_H */
+#endif  /* DOWNLOADERPARALLELSELECT_H */

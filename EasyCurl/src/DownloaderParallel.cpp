@@ -47,111 +47,45 @@ void DownloaderParallel::Download() throw (std::runtime_error)
     {
         /* Keep number of running handles */
         int stillRunning;
-        /* Perform the request, res will get the return code */
-        CURLMcode res = curl_multi_perform(_curlMultiHandle, &stillRunning);
-        /* Check for errors */
-        if(res != CURLM_OK)
-        {
-            std::ostringstream outputstream;
-            outputstream << "curl_multi_perform() failed: "
-                         << curl_multi_strerror(res);
-            throw std::runtime_error(outputstream.str());
-        }
-        // Fill timeval structure from msec
-        auto convertMsecToTimeval = [](const long int& mSec) -> timeval
-        {
-            timeval time;
-            /* set a suitable timeout to play around with */ 
-            time.tv_sec = 1;
-            time.tv_usec = 0;
-            // fill timeval from curlTimeo in msec
-            if(mSec >= 0)
-            {
-                time.tv_sec = mSec / 1000;
-                if(time.tv_sec > 1)
-                {
-                    time.tv_sec = 1;
-                }
-                else
-                {
-                    time.tv_usec = (mSec % 1000) * 1000;
-                }
-            }
-            return time;
-        };
+        int repeats = 0;
         do
         {
-            int rc;                 // select() return code - ready descriptors count
-            CURLMcode mc;           // curl_multi_fdset() return code
+            int fdsNumber;
 
-            fd_set fdRead;          // descriptors read
-            fd_set fdWrite;         // descriptors write
-            fd_set fdExcep;         // descriptors exceptions
-            int fdMaxNumber = -1;   // the highest descriptor number libcurl set
-
-            long curlTimeo = -1;    // milliseconds
-
-            /* set zero bits for all file descriptors */
-            FD_ZERO(&fdRead);
-            FD_ZERO(&fdWrite);
-            FD_ZERO(&fdExcep);
-
-            /* get value from curl - how long to wait for action before proceeding in msec */
-            curl_multi_timeout(_curlMultiHandle, &curlTimeo);
-            timeval timeout = convertMsecToTimeval(curlTimeo);
-            /* get file descriptors from the transfers */ 
-            mc = curl_multi_fdset(_curlMultiHandle, &fdRead, &fdWrite, &fdExcep, &fdMaxNumber);
-
-            if(mc != CURLM_OK)
+            CURLMcode res = curl_multi_perform(_curlMultiHandle, &stillRunning);
+            if(res != CURLM_OK)
             {
-//                std::ostringstream outputstream;
-//                outputstream << "curl_multi_fdset() failed: "
-//                             << curl_multi_strerror(mc);
-//                throw std::runtime_error(outputstream.str());
-                break;
-            }
-            /* On success the value of fdMaxNumber is guaranteed to be >= -1. We call
-               select(fdMaxNumber + 1, ...); specially in case of (fdMaxNumber == -1) there are
-               no fds ready yet so we call select(0, ...) --or Sleep() on Windows--
-               to sleep 100ms, which is the minimum suggested value in the
-               curl_multi_fdset() doc. */
-            if(fdMaxNumber == -1)
-            {
-                #ifdef _WIN32
-                    Sleep(100);
-                    rc = 0;
-                #else
-                    /* Portable sleep for platforms other than Windows. */ 
-                    timeval wait = { 0, 100 * 1000 }; /* 100ms */ 
-                    rc = select(0, NULL, NULL, NULL, &wait);
-                #endif
+                std::ostringstream outputstream;
+                outputstream << "curl_multi_perform() failed: "
+                             << curl_multi_strerror(res);
+                throw std::runtime_error(outputstream.str());
             }
             else
             {
-                /* Note that on some platforms 'timeout' may be modified by select().
-                 If you need access to the original value save a copy beforehand. */ 
-                rc = select(fdMaxNumber + 1, &fdRead, &fdWrite, &fdExcep, &timeout);
+                /* wait for activity, timeout or "nothing" */
+                res = curl_multi_wait(_curlMultiHandle, NULL, 0, 1000, &fdsNumber);
+                if(res != CURLM_OK)
+                {
+                    break;
+                }
             }
-            switch(rc)
+
+            /* 'fdsNumber' being zero means either a timeout or no file descriptors to
+             wait for. Try timeout on first occurrence, then assume no file
+             descriptors and no file descriptors to wait for means wait for 100
+             milliseconds. */
+            if(!fdsNumber)
             {
-                case -1:    // select error
+                repeats++; /* count number of repeated zero fdsNumber */
+                if(repeats > 1)
                 {
-                    break;
+                    timeval wait = { 0, 100 * 1000 }; /* 100ms */
+                    select(0, NULL, NULL, NULL, &wait);
                 }
-                case 0:     // timeout
-                default:    // action  
-                {
-                    res = curl_multi_perform(_curlMultiHandle, &stillRunning);
-                    /* Check for errors */
-                    if(res != CURLM_OK)
-                    {
-                        std::ostringstream outputstream;
-                        outputstream << "curl_multi_perform() failed: "
-                                     << curl_multi_strerror(res);
-                        throw std::runtime_error(outputstream.str());
-                    }
-                    break;
-                }
+            }
+            else
+            {
+                repeats = 0;
             }
         } while(stillRunning);
     }

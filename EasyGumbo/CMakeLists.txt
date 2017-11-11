@@ -7,7 +7,7 @@ project(${PROJECT}
         VERSION 1.0.0)
 
 # c++11
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")
 
 file(GLOB SOURCES
     src/*.h
