@@ -47,10 +47,17 @@ DownloaderString::~DownloaderString() noexcept
     }
 }
 
-void DownloaderString::SetURL(const std::string& URL) noexcept
+void DownloaderString::SetURL(const std::string& URL) throw (std::runtime_error)
 {
     _URL = URL;
-    curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
+    if(_curlEasyHandle)
+    {
+        curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
+    }
+    else
+    {
+        throw std::runtime_error("curl easy is not initialized");
+    }
 }
 
 std::string DownloaderString::GetURL() const noexcept

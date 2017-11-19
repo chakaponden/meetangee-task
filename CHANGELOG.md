@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Todo]
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
 
+## [1.6.1] - 2017-11-19
+### Fixed
+- possible crashes - check and handle with throwing more exceptions
+
+### Changed
+- EasyCurl lib v 1.1.1
+
 ## [1.6.0] - 2017-11-11
 ### Changed
 - EasyCurl lib v 1.1.0

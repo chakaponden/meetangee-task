@@ -46,38 +46,32 @@ FileInfoContainerShp Controller::Execute() throw (std::runtime_error, std::inval
     {
         throw std::invalid_argument("HTML file URL is invalid");
     }
-    /// download source HTML file content as string
-    EasyCurl::DownloaderString downloaderRoot;
-    downloaderRoot.SetURL(rootURI.GetURL());
-    try
-    {
-        downloaderRoot();
-    }
-    catch(const std::runtime_error& exception)
-    {
-        // pass current exception to the top
-        throw;
-    }
+    /// source HTML file parcer for files references links
     HTMLParser parcer;
+    /// separated downloader for each file
     std::vector<EasyCurl::DownloaderStringShp> downloaders;
-    EasyCurl::DownloaderParallel downloaderParallel;
-    /// parse download source HTML file content and loop for each parced link
-    for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(),
-                                             downloaderRoot.GetURL()))
-    {
-        EasyCurl::DownloaderStringShp downloaderSimple =
-                std::make_shared<EasyCurl::DownloaderString>();
-        downloaderSimple->SetURL(hrefValue);
-        downloaders.push_back(downloaderSimple);
-        /**
-         * simple downloader pass to parallel downloader
-         * for download all files in parallel
-         */
-        downloaderParallel.AddDownloader(downloaderSimple.get());
-    }
-    /// execute download all files in parallel
     try
     {
+        /// download source HTML file content as string
+        EasyCurl::DownloaderString downloaderRoot;
+        downloaderRoot.SetURL(rootURI.GetURL());
+        downloaderRoot();
+        EasyCurl::DownloaderParallel downloaderParallel;
+        /// parse download source HTML file content and loop for each parced link
+        for(std::string hrefValue : parcer.Parse(downloaderRoot.GetContent(),
+                                                 downloaderRoot.GetURL()))
+        {
+            EasyCurl::DownloaderStringShp downloaderSimple =
+                    std::make_shared<EasyCurl::DownloaderString>();
+            downloaderSimple->SetURL(hrefValue);
+            downloaders.push_back(downloaderSimple);
+            /**
+             * simple downloader pass to parallel downloader
+             * for download all files in parallel
+             */
+            downloaderParallel.AddDownloader(downloaderSimple.get());
+        }
+        /// execute download all files in parallel
         downloaderParallel();
     }
     catch(const std::runtime_error& exception)

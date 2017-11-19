@@ -31,14 +31,28 @@ DownloaderParallelSelect::~DownloaderParallelSelect() noexcept
     }
 }
 
-void DownloaderParallelSelect::AddDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept
+void DownloaderParallelSelect::AddDownloader(const EasyCurl::ICurlEasyDownloader* downloader) throw (std::runtime_error)
 {
-    curl_multi_add_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
+    if(_curlMultiHandle)
+    {
+        curl_multi_add_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
+    }
+    else
+    {
+        throw std::runtime_error("curl multi is not initialized");
+    }
 }
 
-void DownloaderParallelSelect::RemoveDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept
+void DownloaderParallelSelect::RemoveDownloader(const EasyCurl::ICurlEasyDownloader* downloader) throw (std::runtime_error)
 {
-    curl_multi_remove_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
+        if(_curlMultiHandle)
+    {
+        curl_multi_remove_handle(_curlMultiHandle, downloader->GetCurlEasyHandler());
+    }
+    else
+    {
+        throw std::runtime_error("curl multi is not initialized");
+    }
 }
 
 void DownloaderParallelSelect::Download() throw (std::runtime_error)

@@ -4,7 +4,7 @@ cmake_policy(SET CMP0048 NEW)
 set(PROJECT EasyCurl)
 
 project(${PROJECT}
-        VERSION 1.1.0)
+        VERSION 1.1.1)
 
 # c++11
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11")

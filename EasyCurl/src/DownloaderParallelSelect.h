@@ -44,13 +44,13 @@ namespace EasyCurl
          *        to execution queue for parallel downloading
          * @param[in] downloader ICurlEasyDownloader derivative downloader
          */
-        void AddDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept;
+        void AddDownloader(const EasyCurl::ICurlEasyDownloader* downloader) throw (std::runtime_error);
         /**
          * @brief Remove ICurlEasyDownloader derivative downloader
          *        from execution queue for parallel downloading
          * @param[in] downloader ICurlEasyDownloader derivative downloader
          */
-        void RemoveDownloader(const EasyCurl::ICurlEasyDownloader* downloader) noexcept;
+        void RemoveDownloader(const EasyCurl::ICurlEasyDownloader* downloader) throw (std::runtime_error);
         /**
          * @brief Process parallel download for all ICurlEasyDownloader
          *        derivative downloaders in execution queue

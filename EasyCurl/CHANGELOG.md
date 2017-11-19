@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Todo]
 - download all files in parallel using I/O event notification facility [epool()](https://linux.die.net/man/4/epoll)
 
+## [1.1.1] - 2017-11-19
+### Fixed
+- possible crashes, when curl is not initialized - handle by check and throw exceptions
+
 ## [1.1.0] - 2017-11-11
 ### Changed
 - class DownloaderParallel using POSIX select call() renamed to DownloaderParallelSelect class

@@ -34,7 +34,7 @@ namespace EasyCurl
          * @brief Set source file URL link address for download
          * @param[in] URL Source file URL link address
          */
-        void SetURL(const std::string& URL) noexcept;
+        void SetURL(const std::string& URL) throw (std::runtime_error);
         /**
          * @brief Get source file URL link address for download
          * @return Source file URL link address
@@ -44,7 +44,7 @@ namespace EasyCurl
          * @brief Set full file path location on storage
          * @param[in] fullPath Full file path location on storage
          */
-        void SetFilePath(const std::string& fullPath) throw (std::invalid_argument);
+        void SetFilePath(const std::string& fullPath) throw (std::runtime_error, std::invalid_argument);
         /**
          * @brief Get full file path location on storage
          * @return Full file path location on storage

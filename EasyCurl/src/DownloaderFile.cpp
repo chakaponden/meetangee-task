@@ -45,10 +45,17 @@ DownloaderFile::~DownloaderFile() noexcept
     }
 }
 
-void DownloaderFile::SetURL(const std::string& URL) noexcept
+void DownloaderFile::SetURL(const std::string& URL) throw (std::runtime_error)
 {
     _URL = URL;
-    curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
+    if(_curlEasyHandle)
+    {
+        curl_easy_setopt(_curlEasyHandle, CURLOPT_URL, _URL.c_str());
+    }
+    else
+    {
+        throw std::runtime_error("curl easy is not initialized");
+    }
 }
 
 std::string DownloaderFile::GetURL() const noexcept
@@ -56,7 +63,7 @@ std::string DownloaderFile::GetURL() const noexcept
     return _URL;
 }
 
-void DownloaderFile::SetFilePath(const std::string& fullPath) throw (std::invalid_argument)
+void DownloaderFile::SetFilePath(const std::string& fullPath) throw (std::runtime_error, std::invalid_argument)
 {
     _filePath = fullPath;
     /* control what data CURLOPT_WRITEFUNCTION gets */
@@ -68,8 +75,14 @@ void DownloaderFile::SetFilePath(const std::string& fullPath) throw (std::invali
         throw std::invalid_argument(outputstream.str());
         return;
     }
-    curl_easy_setopt(_curlEasyHandle, CURLOPT_WRITEDATA, _filePointer);
-
+    if(_curlEasyHandle)
+    {
+        curl_easy_setopt(_curlEasyHandle, CURLOPT_WRITEDATA, _filePointer);
+    }
+    else
+    {
+        throw std::runtime_error("curl easy is not initialized");
+    }
 }
 
 std::string DownloaderFile::GetFilePath() const noexcept

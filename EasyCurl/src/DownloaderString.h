@@ -35,7 +35,7 @@ namespace EasyCurl
          * @brief Set source file URL link address for download
          * @param[in] URL source file URL link address
          */
-        void SetURL(const std::string& URL) noexcept;
+        void SetURL(const std::string& URL) throw (std::runtime_error);
         /**
          * @brief Get source file URL link address for download
          * @return source file URL link address
