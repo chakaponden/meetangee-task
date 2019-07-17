@@ -1,4 +1,4 @@
-Task for Aleksandra Zabiran <a.zabiran@itransition.com> ITransition
+Task to join meetangee team
 -------------------------------------------------------------------
 
 [![Build status](https://travis-ci.org/chakaponden/itransition-task.svg?branch=dev)](https://travis-ci.org/chakaponden/itransition-task) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=itransition:task:dev)](https://sonarcloud.io/dashboard?id=itransition:task:dev) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
